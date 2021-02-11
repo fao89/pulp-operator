@@ -11,7 +11,7 @@ on:
     - cron: '00 3 * * *'
 jobs:
   insta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,12 +30,12 @@ jobs:
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
           echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/pulp/pulp-operator:v1plus" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Build Operator
         run: |
-          sudo make docker-build IMG=quay.io/pulp/pulp-operator:latest
+          sudo make docker-build IMG=quay.io/pulp/pulp-operator:v1plus
           sudo docker images
         shell: bash
       - name: Test insta-demo
@@ -53,7 +53,7 @@ jobs:
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24817/pulp/api/v3/status/
 
   components:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -71,7 +71,8 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
+          echo "IMG=quay.io/pulp/pulp-operator:v1plus" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Install k3s and Operator
@@ -80,7 +81,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo make docker-build IMG=quay.io/pulp/pulp-operator:latest
+          sudo make docker-build IMG=quay.io/pulp/pulp-operator:v1plus
           sudo docker images
         shell: bash
       - name: Deploy pulp-operator to K8s
@@ -108,7 +109,7 @@ jobs:
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24817/pulp/api/v3/status/
 
   molecule:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -126,11 +127,11 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/pulp/pulp-operator:v1plus" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Install
-        run: pip3 install docker molecule molecule-docker ansible-lint yamllint flake8 openshift jmespath
+        run: pip3 install molecule[ansible,docker,lint] openshift jmespath
       - name: Molecule
         run: .ci/scripts/molecule.sh
         shell: bash
@@ -139,7 +140,7 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: [insta, components, molecule]
     steps:
       - uses: actions/checkout@v2
@@ -158,7 +159,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/pulp/pulp-operator:v1plus" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Install k3s and Operator
@@ -167,7 +168,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo make docker-build IMG=quay.io/pulp/pulp-operator:latest
+          sudo make docker-build IMG=quay.io/pulp/pulp-operator:v1plus
           sudo docker images
         shell: bash
       - name: Setting secrets

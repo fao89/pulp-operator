@@ -2,7 +2,7 @@
 
 /usr/bin/wait_on_postgres.py
 
-# Generating /var/lib/pulp/static at runtime rather than at container build time
+# Generating /var/lib/pulp/assets at runtime rather than at container build time
 # facilitates all of /var/lib/pulp being a separate volume.
 django-admin collectstatic --noinput
 
@@ -10,6 +10,9 @@ django-admin collectstatic --noinput
 # Assumes they are all named like "pulp-file" -> "file", with no 2nd dash.
 # (Was previously needed when we ran `django-admin makemigrations`)
 # PLUGINS=$(pip list | awk -F '[[:space:]]+|[-]' '/pulp-/{printf $2 " " }')
+
+# MEDIA_ROOT
+mkdir -p /var/lib/pulp/media
 
 django-admin migrate --noinput
 django-admin migrate auth --noinput

@@ -11,8 +11,9 @@ django-admin collectstatic --noinput
 # (Was previously needed when we ran `django-admin makemigrations`)
 # PLUGINS=$(pip list | awk -F '[[:space:]]+|[-]' '/pulp-/{printf $2 " " }')
 
-# MEDIA_ROOT
+echo "Media root"
 mkdir -p /var/lib/pulp/media
+ls -al /var/lib/pulp
 
 django-admin migrate --noinput
 django-admin migrate auth --noinput

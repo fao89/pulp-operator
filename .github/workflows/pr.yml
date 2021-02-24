@@ -5,7 +5,7 @@ on:
       - '*'
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: PR head repo
         id: head_repo_name
@@ -43,7 +43,7 @@ jobs:
         shell: bash
 
   insta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: lint
     steps:
       - name: PR head repo
@@ -101,7 +101,7 @@ jobs:
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24817/pulp/api/v3/status/
 
   components:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: lint
     steps:
       - uses: actions/checkout@v2
@@ -162,7 +162,7 @@ jobs:
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24817/pulp/api/v3/status/
 
   molecule:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: lint
     steps:
       - uses: actions/checkout@v2

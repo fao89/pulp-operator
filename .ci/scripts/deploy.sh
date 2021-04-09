@@ -16,22 +16,6 @@ pip install ansible
 ansible-playbook -v build.yaml
 cd $GITHUB_WORKSPACE
 
-echo "Test pulp/pulpcore images"
-sudo -E ./up.sh
-.ci/scripts/pulp-operator-check-and-wait.sh $KUBE_FLAG
-.ci/scripts/retry.sh 3 ".ci/scripts/pulp_file-tests.sh -m"
-
-docker images
-
-echo "Deploy pulp latest"
-sudo -E QUAY_REPO_NAME=pulp $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-
-echo "Deploy pulpcore latest"
-sudo -E QUAY_REPO_NAME=pulpcore $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-
-echo "Deploy pulp-web latest"
-sudo -E QUAY_REPO_NAME=pulp-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-
 echo "Deploy galaxy latest"
 sudo -E QUAY_REPO_NAME=galaxy $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
 

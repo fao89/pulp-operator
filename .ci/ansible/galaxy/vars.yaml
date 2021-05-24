@@ -5,6 +5,7 @@ images:
       container_file: Containerfile.core
       pulpcore: git+https://github.com/pulp/pulpcore.git@3.11#egg=pulpcore
       plugins:
+        - "git+https://github.com/pulp/pulp_container.git@2.5"
         - "git+https://github.com/ansible/galaxy_ng.git"
   - galaxy_web_master:
       image_name: galaxy-web

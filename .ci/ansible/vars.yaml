@@ -6,25 +6,13 @@ images:
       # Must specify egg name here so that the Dockerfile can specify the
       # setuptools extra of postgres
       pulpcore: git+https://github.com/pulp/pulpcore.git#egg=pulpcore
-  - pulp_master_plugins_master:
-      image_name: pulp
-      tag: latest
-      container_file: Containerfile.core
-      pulpcore: git+https://github.com/pulp/pulpcore.git@3.12#egg=pulpcore
-      plugins:
-        - "git+https://github.com/pulp/pulp-certguard.git"
-        - "git+https://github.com/pulp/pulp_file.git"
-        - "git+https://github.com/pulp/pulp_ansible.git"
-        - "git+https://github.com/pulp/pulp_container.git"
-        - "git+https://github.com/pulp/pulp_deb.git"
-        - "git+https://github.com/pulp/pulp_python.git"
-        - "git+https://github.com/pulp/pulp_rpm.git"
   - galaxy_master:
       image_name: galaxy
       tag: latest
       container_file: Containerfile.core
       pulpcore: git+https://github.com/pulp/pulpcore.git@3.11#egg=pulpcore
       plugins:
+        - "git+https://github.com/pulp/pulp_container.git@2.5"
         - "git+https://github.com/ansible/galaxy_ng.git"
 registry: quay.io
 project: pulp

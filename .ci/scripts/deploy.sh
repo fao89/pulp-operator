@@ -27,6 +27,8 @@ else
 fi
 cd $GITHUB_WORKSPACE
 
+docker images
+
 echo "Build web images"
 cd $GITHUB_WORKSPACE/containers/
 cp $GITHUB_WORKSPACE/.ci/ansible/web/vars.yaml vars/vars.yaml

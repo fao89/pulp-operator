@@ -234,7 +234,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [insta, components, molecule, galaxy]
     strategy:
       fail-fast: false
       # Testing different python versions because of
@@ -291,14 +290,9 @@ jobs:
           git clone --depth=1 https://github.com/pulp/pulp_file.git
           CI_TEST=${{ matrix.CI_TEST }} .ci/scripts/deploy.sh -m
         shell: bash
-      - id: latest_release
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
-          excludes: draft
       - name: Define QUAY_IMAGE_TAG environment variable
         run: |
-          echo "QUAY_IMAGE_TAG=${{steps.latest_release.outputs.release}}-$(date +%j)" >> $GITHUB_ENV
+          echo "QUAY_IMAGE_TAG=0.2.0-$(date +%j)" >> $GITHUB_ENV
           echo "QUAY_EXPIRE=14" >> $GITHUB_ENV
         shell: bash
       - name: Deploy tagged nightly build
@@ -309,12 +303,4 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
       - name: After failure
         if: failure()
-        run: |
-          sudo docker images
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-operator -c pulp-operator --tail=10000
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-api --tail=10000
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-content --tail=10000
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-worker --tail=10000
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-resource-manager --tail=10000
-          sudo -E kubectl logs -l app.kubernetes.io/name=pulp-web --tail=10000
-          http --timeout 30 --check-status --pretty format --print hb http://localhost:24817/pulp/api/v3/status/
+        uses: mxschmitt/action-tmate@v3.5

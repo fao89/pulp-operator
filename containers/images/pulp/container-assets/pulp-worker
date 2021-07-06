@@ -10,7 +10,7 @@ if [[ "$NEW_TASKING_SYSTEM" == "no" ]]; then
     # TODO: Set ${PULP_WORKER_NUMBER} to the Pod Number
     # In the meantime, the hostname provides uniqueness.
     exec rq worker --url "redis://${REDIS_SERVICE_HOST}:${REDIS_SERVICE_PORT}" -w "pulpcore.tasking.worker.PulpWorker" -c "pulpcore.rqconfig"
-elif
+else
     export PATH /usr/local/bin:/usr/bin/
     /usr/local/bin/pulpcore-worker
 fi

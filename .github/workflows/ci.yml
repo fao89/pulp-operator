@@ -288,6 +288,11 @@ jobs:
         run: python3 .github/workflows/scripts/secrets.py "$SECRETS_CONTEXT"
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
+      - name: Add stable images
+        if: github.event_name == 'schedule'
+        run: |
+          pip install aiohttp packaging PyYAML sh
+          CI_TEST=${{ matrix.CI_TEST }} python3 .ci/scripts/images.py
       - name: Deploy
         run: |
           git clone --depth=1 https://github.com/pulp/pulp_file.git

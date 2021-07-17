@@ -1,7 +1,7 @@
 images:
   - pulp_web_master:
       image_name: pulp-web
-      tag: latest
+      tag: 0.3.0
       container_file: Containerfile.web
       base_image_name: pulp
       python_version: "3.9"
@@ -10,7 +10,7 @@ images:
         - pulp_container
   - galaxy_web_master:
       image_name: galaxy-web
-      tag: latest
+      tag: 0.3.0
       container_file: Containerfile.web
       base_image_name: galaxy
       python_version: "3.9"

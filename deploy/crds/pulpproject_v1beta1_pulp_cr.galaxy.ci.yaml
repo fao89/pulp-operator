@@ -5,7 +5,7 @@ metadata:
 spec:
   image: galaxy
   image_web: "galaxy-web"
-  tag: "latest"
+  tag: "0.3.0"
   admin_password_secret: "example-pulp-admin-password"
   storage_type: File
   ingress_type: nodeport

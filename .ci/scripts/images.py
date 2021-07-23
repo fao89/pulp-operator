@@ -17,14 +17,14 @@ PULP_PLUGINS = [
     "pulp-rpm",
 ]
 PULP_PLUGINS_WITH_WEBSERVER_SNIPPETS = [
-    "pulp-ansible",
-    "pulp-container",
-    "pulp-python",
+    "pulp_ansible",
+    "pulp_container",
+    "pulp_python",
 ]
 GALAXY_PLUGINS_WITH_WEBSERVER_SNIPPETS = [
     "galaxy_ng",
-    "pulp-ansible",
-    "pulp-container",
+    "pulp_ansible",
+    "pulp_container",
 ]
 
 
@@ -158,7 +158,7 @@ if __name__ == "__main__":
         save_vars(
             image="galaxy",
             tag=response["info"]["version"],
-            pulpcore=pulpcore_req,
+            pulpcore=f'"{pulpcore_req}"',
             plugins=[f"galaxy_ng=={response['info']['version']}"]
         )
         print(f"galaxy_ng=={response['info']['version']} {pulpcore_req}")

@@ -296,13 +296,6 @@ jobs:
         run: |
           pip install aiohttp packaging PyYAML sh
           CI_TEST=${{ matrix.CI_TEST }} python3 .ci/scripts/images.py
-      - name: Define QUAY_IMAGE_TAG environment variable
-        run: |
-          pip install PyYAML
-          CURRENT_VERSION=$(python -c 'import yaml; print(yaml.safe_load(open("deploy/olm-catalog/pulp-operator/manifests/pulp-operator.clusterserviceversion.yaml"))["spec"]["version"])')
-          echo "QUAY_IMAGE_TAG=$CURRENT_VERSION-$(date +%j)" >> $GITHUB_ENV
-          echo "QUAY_EXPIRE=14" >> $GITHUB_ENV
-        shell: bash
       - name: Deploy tagged nightly build
         run: CI_TEST=${{ matrix.CI_TEST }} .ci/scripts/deploy.sh -m
         shell: bash

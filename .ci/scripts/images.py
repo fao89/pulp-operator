@@ -157,7 +157,7 @@ if __name__ == "__main__":
         pulpcore_req = pulpcore_req.replace(" (", "").replace(")", "")
         save_vars(
             image="galaxy",
-            tag=response["info"]["version"],
+            tag="stable",
             pulpcore=f'"{pulpcore_req}"',
             plugins=[f"galaxy_ng=={response['info']['version']}"]
         )
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         if plugins:
             save_vars(
                 image="pulp",
-                tag=response["info"]["version"],
+                tag="stable",
                 pulpcore=f"pulpcore=={response['info']['version']}",
                 plugins=plugins
             )

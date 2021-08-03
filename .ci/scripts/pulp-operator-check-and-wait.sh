@@ -90,7 +90,7 @@ echo "Waiting for pods to transition to Running ..."
 # NOTE: Before the pods can be started, they must be downloaded/cached from
 # quay.io .
 # Therefore, this wait is highly dependent on network speed.
-for tries in {0..180}; do
+for tries in {0..40}; do
   pods=$(sudo -E $KUBECTL get pods -o wide)
   if [[ $(echo "$pods" | grep -c -v -E "STATUS|Running") -eq 0 ]]; then
     echo "PODS:"
@@ -109,7 +109,7 @@ for tries in {0..180}; do
         sudo -E docker images
       fi
     fi
-    if [[ $tries -eq 180 ]]; then
+    if [[ $tries -eq 40 ]]; then
       echo "ERROR 3: Pods never all transitioned to Running state"
       storage_debug
       exit 3

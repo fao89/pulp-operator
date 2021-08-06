@@ -236,7 +236,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [insta, components, molecule, galaxy]
     strategy:
       fail-fast: false
       # Testing different python versions because of
@@ -289,7 +288,6 @@ jobs:
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Add stable images
-        if: github.event_name != 'schedule'
         run: |
           pip install aiohttp packaging PyYAML sh
           CI_TEST=${{ matrix.CI_TEST }} python3 .ci/scripts/images.py
@@ -306,15 +304,16 @@ jobs:
         run: CI_TEST=${{ matrix.CI_TEST }} .ci/scripts/deploy.sh
         shell: bash
       - name: Define QUAY_IMAGE_TAG environment variable
-        if: github.event_name == 'schedule'
         run: |
-          pip install PyYAML
-          if [[ "${{ matrix.CI_TEST }}" == "galaxy" ]]; then
-            CURRENT_VERSION=$(docker run -it quay.io/pulp/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
+          TEST=${{ matrix.CI_TEST }}
+          echo $TEST
+          if [[ "$TEST" == "galaxy" ]]; then
+            CURRENT_VERSION=$(docker run quay.io/pulp/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
           else
-            CURRENT_VERSION=$(docker run -it quay.io/pulp/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
+            CURRENT_VERSION=$(docker run quay.io/pulp/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
           fi
           echo $CURRENT_VERSION
+          exit
           echo "QUAY_IMAGE_TAG=$CURRENT_VERSION-$(date +%j)" >> $GITHUB_ENV
           echo "QUAY_EXPIRE=14" >> $GITHUB_ENV
         shell: bash

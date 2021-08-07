@@ -1,4 +1,7 @@
 ---
+- set_fact:
+    fingress_type: 'ingress'
+
 - name: pulp routes
   k8s:
     state: "{{ deployment_state }}"
@@ -6,5 +9,5 @@
   with_items:
     - pulp
   when:
-    - ingress_type is defined
-    - ('route' == ingress_type|lower) or ('ingress' == ingress_type|lower)
+    - fingress_type is defined
+    - ('route' == fingress_type|lower) or ('ingress' == fingress_type|lower)

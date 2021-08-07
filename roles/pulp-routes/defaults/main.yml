@@ -12,3 +12,4 @@ hostname: '{{ deployment_type }}.example.com'
 #   kubernetes.io/ingress.class: nginx
 #   nginx.ingress.kubernetes.io/proxy-connect-timeout: 60s
 ingress_annotations: ''
+route_tls_termination_mechanism: edge

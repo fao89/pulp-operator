@@ -34,10 +34,32 @@
       - app.kubernetes.io/part-of: '{{ deployment_type }}'
       - app.kubernetes.io/managed-by: '{{ deployment_type }}-operator'
   register: route_list
+  when:
+    - is_openshift
+    - not ingress_type
 
 - name: DEBUG Routes List
   debug:
     msg: "{{ route_list }}"
+  when:
+    - is_openshift
+    - not ingress_type
+
+- name: Get Ingress List
+  k8s_info:
+    kind: Ingress
+    namespace: '{{ meta.namespace }}'
+  register: ingress_list
+
+- name: DEBUG Ingress List
+  debug:
+    msg: "{{ ingress_list['resources'][0]['spec']['rules'] }}"
+  when: ingress_list | length
+
+- name: DEBUGGGGGGG
+  debug:
+    msg: "{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
+  when: "'{{ meta.name }}-web-svc' in {{ ingress_list['resources'][0]['spec']['rules'] |string }}"
 
 - name: Get URL when Ingress is Route
   block:
@@ -53,7 +75,6 @@
         web_url: "https://{{ route_url['resources'][0]['status']['ingress'][0]['host'] }}"
 
   when: ingress_type | lower == 'route'
-
 
 - name: Set node address for route
   set_fact:

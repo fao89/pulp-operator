@@ -1,6 +1,22 @@
 #!/bin/bash -e
 #!/usr/bin/env bash
 
+if [[ "$CI_TEST" == "galaxy" ]]; then
+  echo "Deploy galaxy latest"
+  sudo -E QUAY_REPO_NAME=galaxy $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+  echo "Deploy galaxy-web latest"
+  sudo -E QUAY_REPO_NAME=galaxy-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+else
+  echo "Deploy pulp latest"
+  sudo -E QUAY_REPO_NAME=pulp $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+
+  echo "Deploy pulpcore latest"
+  sudo -E QUAY_REPO_NAME=pulpcore $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+
+  echo "Deploy pulp-web latest"
+  sudo -E QUAY_REPO_NAME=pulp-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+fi
+
 if [[ -z "${QUAY_EXPIRE+x}" ]]; then
   echo "Deploy pulp-operator"
   sudo -E $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
@@ -24,22 +40,6 @@ if [[ -z "${QUAY_EXPIRE+x}" ]]; then
   opm index add -c docker --bundles quay.io/pulp/pulp-operator-bundle:${QUAY_IMAGE_TAG} --tag quay.io/pulp/pulp-index:${QUAY_IMAGE_TAG}
   sudo -E QUAY_REPO_NAME=pulp-index $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
   docker images
-fi
-
-if [[ "$CI_TEST" == "galaxy" ]]; then
-  echo "Deploy galaxy latest"
-  sudo -E QUAY_REPO_NAME=galaxy $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-  echo "Deploy galaxy-web latest"
-  sudo -E QUAY_REPO_NAME=galaxy-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-else
-  echo "Deploy pulp latest"
-  sudo -E QUAY_REPO_NAME=pulp $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-
-  echo "Deploy pulpcore latest"
-  sudo -E QUAY_REPO_NAME=pulpcore $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-
-  echo "Deploy pulp-web latest"
-  sudo -E QUAY_REPO_NAME=pulp-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
 fi
 
 docker images

@@ -34,7 +34,7 @@ spec:
               project:
                 description: The container image registry project for pulling images.
                 type: string
-                default: pulp
+                default: fabricio_aguiar
               image:
                 description: The image name (repo name) for the pulp image.
                 type: string

@@ -32,7 +32,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/fabricio_aguiar/pulp-operator:latest" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Start minikube
@@ -49,7 +49,7 @@ jobs:
           sudo wget https://github.com/operator-framework/operator-sdk/releases/download/$CURRENT_VERSION/operator-sdk-$CURRENT_VERSION-x86_64-linux-gnu -O /usr/local/bin/operator-sdk
           sudo chmod +x /usr/local/bin/operator-sdk
           echo ::endgroup::
-          sudo -E operator-sdk build quay.io/pulp/pulp-operator:latest
+          sudo -E operator-sdk build quay.io/fabricio_aguiar/pulp-operator:latest
           sudo -E docker images
         shell: bash
       - name: Test insta-demo
@@ -90,7 +90,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/fabricio_aguiar/pulp-operator:latest" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Start minikube
@@ -108,7 +108,7 @@ jobs:
           sudo wget https://github.com/operator-framework/operator-sdk/releases/download/$CURRENT_VERSION/operator-sdk-$CURRENT_VERSION-x86_64-linux-gnu -O /usr/local/bin/operator-sdk
           sudo chmod +x /usr/local/bin/operator-sdk
           echo ::endgroup::
-          sudo -E operator-sdk build quay.io/pulp/pulp-operator:latest
+          sudo -E operator-sdk build quay.io/fabricio_aguiar/pulp-operator:latest
           sudo -E docker images
         shell: bash
       - name: Deploy pulp-operator to K8s
@@ -159,7 +159,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/fabricio_aguiar/pulp-operator:latest" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Start minikube
@@ -177,7 +177,7 @@ jobs:
           sudo wget https://github.com/operator-framework/operator-sdk/releases/download/$CURRENT_VERSION/operator-sdk-$CURRENT_VERSION-x86_64-linux-gnu -O /usr/local/bin/operator-sdk
           sudo chmod +x /usr/local/bin/operator-sdk
           echo ::endgroup::
-          sudo -E operator-sdk build quay.io/pulp/pulp-operator:latest
+          sudo -E operator-sdk build quay.io/fabricio_aguiar/pulp-operator:latest
           sudo -E docker images
         shell: bash
       - name: Deploy pulp-operator to K8s
@@ -229,7 +229,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/fabricio_aguiar/pulp-operator:latest" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Install
@@ -253,7 +253,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [insta, components, molecule, galaxy]
     strategy:
       fail-fast: false
       # Testing different python versions because of
@@ -279,7 +278,7 @@ jobs:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
-          echo "IMG=quay.io/pulp/pulp-operator:latest" >> $GITHUB_ENV
+          echo "IMG=quay.io/fabricio_aguiar/pulp-operator:latest" >> $GITHUB_ENV
           echo "CI_TEST=true" >> $GITHUB_ENV
         shell: bash
       - name: Start minikube
@@ -297,7 +296,7 @@ jobs:
           sudo wget https://github.com/operator-framework/operator-sdk/releases/download/$CURRENT_VERSION/operator-sdk-$CURRENT_VERSION-x86_64-linux-gnu -O /usr/local/bin/operator-sdk
           sudo chmod +x /usr/local/bin/operator-sdk
           echo ::endgroup::
-          sudo -E operator-sdk build quay.io/pulp/pulp-operator:latest
+          sudo -E operator-sdk build quay.io/fabricio_aguiar/pulp-operator:latest
           sudo -E docker images
         shell: bash
       - name: Setting secrets
@@ -324,9 +323,9 @@ jobs:
           TEST=${{ matrix.CI_TEST }}
           echo $TEST
           if [[ "$TEST" == "galaxy" ]]; then
-            CURRENT_VERSION=$(docker run quay.io/pulp/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
+            CURRENT_VERSION=$(docker run quay.io/fabricio_aguiar/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
           else
-            CURRENT_VERSION=$(docker run quay.io/pulp/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
+            CURRENT_VERSION=$(docker run quay.io/fabricio_aguiar/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
           fi
           echo $CURRENT_VERSION
           echo "QUAY_IMAGE_TAG=$CURRENT_VERSION-$(date +%j)" >> $GITHUB_ENV

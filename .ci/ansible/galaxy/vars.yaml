@@ -7,4 +7,4 @@ images:
       plugins:
         - "git+https://github.com/ansible/galaxy_ng.git"
 registry: quay.io
-project: pulp
+project: fabricio_aguiar

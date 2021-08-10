@@ -91,7 +91,7 @@ def to_deploy(images, tag):
     for image in images:
         line = f'sudo -E QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="{tag}" \{path}'
         os.system(f"echo {line} >> .ci/scripts/deploy.sh")
-        stable = f"quay.io/pulp/{image}:stable"
+        stable = f"quay.io/fabricio_aguiar/{image}:stable"
         os.system(f"echo 'docker tag {image}:{tag} {stable}' >> .ci/scripts/deploy.sh")
         line = f'sudo -E QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="stable" \{path}'
         os.system(f"echo {line} >> .ci/scripts/deploy.sh")

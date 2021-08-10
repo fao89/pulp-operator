@@ -25,9 +25,9 @@ if [[ -z "${QUAY_EXPIRE+x}" ]]; then
 
 
   echo $QUAY_IMAGE_TAG
-  docker tag quay.io/pulp/pulp-operator:latest quay.io/pulp/pulp-operator:$QUAY_IMAGE_TAG
+  docker tag quay.io/fabricio_aguiar/pulp-operator:latest quay.io/fabricio_aguiar/pulp-operator:$QUAY_IMAGE_TAG
   sudo -E $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-  docker build -f bundle.Dockerfile -t quay.io/pulp/pulp-operator-bundle:${QUAY_IMAGE_TAG} .
+  docker build -f bundle.Dockerfile -t quay.io/fabricio_aguiar/pulp-operator-bundle:${QUAY_IMAGE_TAG} .
   sudo -E QUAY_REPO_NAME=pulp-operator-bundle $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
 
 
@@ -37,7 +37,7 @@ if [[ -z "${QUAY_EXPIRE+x}" ]]; then
   sudo chmod +x /usr/local/bin/opm
 
 
-  opm index add -c docker --bundles quay.io/pulp/pulp-operator-bundle:${QUAY_IMAGE_TAG} --tag quay.io/pulp/pulp-index:${QUAY_IMAGE_TAG}
+  opm index add -c docker --bundles quay.io/fabricio_aguiar/pulp-operator-bundle:${QUAY_IMAGE_TAG} --tag quay.io/fabricio_aguiar/pulp-index:${QUAY_IMAGE_TAG}
   sudo -E QUAY_REPO_NAME=pulp-index $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
   docker images
 fi

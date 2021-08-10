@@ -24,7 +24,7 @@ spec:
       serviceAccountName: pulp-operator
       containers:
         - name: pulp-operator
-          image: "quay.io/pulp/pulp-operator:latest"
+          image: "quay.io/fabricio_aguiar/pulp-operator:latest"
           # securityContext: # FIXME: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
           #   runAsUser: 1000
           #   runAsNonRoot: true

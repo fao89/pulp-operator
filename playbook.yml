@@ -24,7 +24,7 @@
         execution_environments: ""
     deployment_state: present
     registry: quay.io
-    project: pulp
+    project: fabricio_aguiar
     image: pulp
     image_web: pulp-web
     image_pull_secret: ""

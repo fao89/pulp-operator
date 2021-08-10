@@ -6,7 +6,7 @@ metadata:
   # The registry to grab the pulp image from.
 # registry: quay.io
   # The project (organization or user) to grab the pulp image from
-# project: pulp
+# project: fabricio_aguiar
   # The image name (repo name) for the pulp image.
 # image: pulp
   # The image tag for the pulp image. Quotes needed for '.' on certain K8s.

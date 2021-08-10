@@ -87,4 +87,4 @@ images:
         - pulp_ansible
         - pulp_container
 registry: quay.io
-project: pulp
+project: fabricio_aguiar

@@ -36,14 +36,19 @@
   register: route_list
   when:
     - is_openshift
-    - not ingress_type
+
+- name: DEBUG Ingress type
+  debug:
+    msg: "{{ ingress_type }}"
+  when: ingress_type is defined
+
 
 - name: DEBUG Routes List
   debug:
     msg: "{{ route_list }}"
   when:
     - is_openshift
-    - not ingress_type
+    - route_list | length
 
 - name: Get Ingress List
   k8s_info:
@@ -53,13 +58,13 @@
 
 - name: DEBUG Ingress List
   debug:
-    msg: "{{ ingress_list['resources'][0]['spec']['rules'] }}"
+    msg: "{{ ingress_list }}" # ['resources'][0]['spec']['rules'] }}"
   when: ingress_list | length
 
-- name: DEBUGGGGGGG
-  debug:
-    msg: "{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
-  when: "'{{ meta.name }}-web-svc' in {{ ingress_list['resources'][0]['spec']['rules'] |string }}"
+# - name: DEBUGGGGGGG
+#   debug:
+#     msg: "{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
+#   when: "'{{ meta.name }}-web-svc' in {{ ingress_list['resources'][0]['spec']['rules'] |string }}"
 
 - name: Get URL when Ingress is Route
   block:

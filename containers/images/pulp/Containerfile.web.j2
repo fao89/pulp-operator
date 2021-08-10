@@ -1,4 +1,4 @@
-FROM {{ registry | default('quay.io') }}/{{ project | default('pulp') }}/{{ item.value.base_image_name | default('pulp') }}:{{ item.value.tag | default('latest') }} as builder
+FROM {{ registry | default('quay.io') }}/{{ project | default('fabricio_aguiar') }}/{{ item.value.base_image_name | default('pulp') }}:{{ item.value.tag | default('latest') }} as builder
 
 RUN mkdir -p /etc/nginx/pulp \
              /www/data

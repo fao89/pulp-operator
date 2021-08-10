@@ -9,13 +9,13 @@
 # Pulp is an organization (not an individual user account) on Quay:
 # https://quay.io/organization/pulp
 # For test publishes, one can override this to any org or user.
-QUAY_PROJECT_NAME=${QUAY_PROJECT_NAME:-pulp}
+QUAY_PROJECT_NAME=${QUAY_PROJECT_NAME:-fabricio_aguiar}
 # The image name, AKA the Quay repo
 QUAY_REPO_NAME=${QUAY_REPO_NAME:-pulp-operator}
 # The image tag
 QUAY_IMAGE_TAG=${QUAY_IMAGE_TAG:-latest}
 
-QUAY_BOT_USERNAME=${QUAY_BOT_USERNAME:-pulp+github}
+QUAY_BOT_USERNAME=${QUAY_BOT_USERNAME:-fabricio_aguiar}
 
 # Reference: https://adriankoshka.github.io/blog/posts/travis-and-quay/
 echo "$QUAY_BOT_PASSWORD" | docker login -u "$QUAY_BOT_USERNAME" --password-stdin quay.io

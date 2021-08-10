@@ -35,7 +35,7 @@ metadata:
       ]
     capabilities: Basic Install
     categories: Integration & Delivery
-    containerImage: quay.io/pulp/pulp-operator:latest
+    containerImage: quay.io/fabricio_aguiar/pulp-operator:latest
     createdAt: "2021-03-26 16:57:40"
     description: Pulp is a platform for managing repositories of software packages and making them available to a large number of consumers.
     repository: https://github.com/pulp/pulp-operator
@@ -758,7 +758,7 @@ spec:
                   value: pulp-operator
                 - name: ANSIBLE_GATHERING
                   value: explicit
-                image: quay.io/pulp/pulp-operator:latest
+                image: quay.io/fabricio_aguiar/pulp-operator:latest
                 imagePullPolicy: Always
                 livenessProbe:
                   httpGet:

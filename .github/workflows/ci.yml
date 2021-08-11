@@ -311,6 +311,7 @@ jobs:
       - name: Testing images
         run: |
           git clone --depth=1 https://github.com/pulp/pulp_file.git
+          sudo -E $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
           CI_TEST=${{ matrix.CI_TEST }} .github/workflows/scripts/build_images.sh
           CI_TEST=${{ matrix.CI_TEST }} .github/workflows/scripts/test_images.sh -m
         shell: bash

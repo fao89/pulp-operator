@@ -58,6 +58,21 @@
   no_log: true
   when: pulp_settings is defined
 
+- name: Get information about the cluster
+  set_fact:
+    api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+  when:
+  - not is_openshift
+  - not is_k8s
+
+- name: Determine the cluster type
+  set_fact:
+    is_openshift: "{{ True if 'route.openshift.io' in api_groups else False }}"
+    is_k8s: "{{ False if 'route.openshift.io' in api_groups else True }}"
+  when:
+  - not is_openshift
+  - not is_k8s
+
 - include_tasks:
     file: get_node_ip.yml
   when: content_origin_temp is not defined
@@ -87,21 +102,6 @@
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml.j2') | from_yaml }}"
   with_items:
     - pulp-api
-
-- name: Get information about the cluster
-  set_fact:
-    api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
-  when:
-  - not is_openshift
-  - not is_k8s
-
-- name: Determine the cluster type
-  set_fact:
-    is_openshift: "{{ True if 'route.openshift.io' in api_groups else False }}"
-    is_k8s: "{{ False if 'route.openshift.io' in api_groups else True }}"
-  when:
-  - not is_openshift
-  - not is_k8s
 
 # Indicate what kind of cluster we are in (OpenShift or Kubernetes).
 - debug:

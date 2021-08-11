@@ -28,43 +28,54 @@
     kind: Route
     namespace: '{{ meta.namespace }}'
     label_selectors:
-      - app.kubernetes.io/name: 'nginx'
-      - app.kubernetes.io/instance: 'nginx-{{ meta.name }}'
-      - app.kubernetes.io/component: webserver
-      - app.kubernetes.io/part-of: '{{ deployment_type }}'
-      - app.kubernetes.io/managed-by: '{{ deployment_type }}-operator'
+      - 'app.kubernetes.io/name = nginx'
+      - 'app.kubernetes.io/instance = nginx-{{ meta.name }}'
+      - 'app.kubernetes.io/component = webserver'
+      - 'app.kubernetes.io/part-of = {{ deployment_type }}'
+      - 'app.kubernetes.io/managed-by = {{ deployment_type }}-operator'
   register: route_list
   when:
     - is_openshift
+    - ingress_type|lower == "none"
 
-- name: DEBUG Ingress type
-  debug:
-    msg: "{{ ingress_type }}"
-  when: ingress_type is defined
-
-
-- name: DEBUG Routes List
-  debug:
-    msg: "{{ route_list }}"
+- name: Dynamic set node address for route
+  set_fact:
+    content_origin: "https://{{ route_list['resources'][0]['spec']['host'] }}"
+    ansible_api_hostname: "https://{{ route_list['resources'][0]['spec']['host'] }}"
+    token_server: "https://{{ route_list['resources'][0]['spec']['host'] }}/token/"
   when:
     - is_openshift
-    - route_list | length
+    - ingress_type|lower == "none"
+    - route_list.resources | length
 
 - name: Get Ingress List
   k8s_info:
     kind: Ingress
     namespace: '{{ meta.namespace }}'
+    label_selectors:
+      - 'app.kubernetes.io/name = nginx'
+      - 'app.kubernetes.io/instance = nginx-{{ meta.name }}'
+      - 'app.kubernetes.io/component = webserver'
+      - 'app.kubernetes.io/part-of = {{ deployment_type }}'
+      - 'app.kubernetes.io/managed-by = {{ deployment_type }}-operator'
   register: ingress_list
+  when:
+    - not is_openshift
+    # - ingress_type|lower == "none"
 
-- name: DEBUG Ingress List
+- name: DEBUG Show ingress_list
   debug:
-    msg: "{{ ingress_list }}" # ['resources'][0]['spec']['rules'] }}"
-  when: ingress_list | length
+    msg: "{{ ingress_list }}"
 
-# - name: DEBUGGGGGGG
-#   debug:
-#     msg: "{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
-#   when: "'{{ meta.name }}-web-svc' in {{ ingress_list['resources'][0]['spec']['rules'] |string }}"
+- name: Dynamic set node address for ingress
+  set_fact:
+    content_origin: "https://{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
+    ansible_api_hostname: "https://{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}"
+    token_server: "https://{{ ingress_list['resources'][0]['spec']['rules'][0]['host'] }}/token/"
+  when:
+    - not is_openshift
+    # - ingress_type|lower == "none"
+    - ingress_list.resources | length
 
 - name: Get URL when Ingress is Route
   block:
@@ -170,3 +181,19 @@
 - name: DEBUG Show content_origin
   debug:
     msg: "{{ default_settings.content_origin }}"
+
+- name: DEBUG Show ingress_type
+  debug:
+    msg: "{{ ingress_type }}"
+
+- name: DEBUG Show is_openshift
+  debug:
+    msg: "{{ is_openshift }}"
+
+- name: DEBUG Show route_list
+  debug:
+    msg: "{{ route_list }}"
+
+- name: DEBUG Show ingress_list
+  debug:
+    msg: "{{ ingress_list }}"

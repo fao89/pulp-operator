@@ -25,7 +25,7 @@ if [[ -z "${QUAY_EXPIRE+x}" ]]; then
 
 
   echo $QUAY_IMAGE_TAG
-  docker tag quay.io/pulp/pulp-operator:latest quay.io/pulp/pulp-operator:$QUAY_IMAGE_TAG
+  docker tag quay.io/pulp/pulp-operator:v1plus quay.io/pulp/pulp-operator:$QUAY_IMAGE_TAG
   sudo -E $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
   make bundle-build BUNDLE_IMG="quay.io/pulp/pulp-operator-bundle:${QUAY_IMAGE_TAG}"
   sudo -E QUAY_REPO_NAME=pulp-operator-bundle $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh

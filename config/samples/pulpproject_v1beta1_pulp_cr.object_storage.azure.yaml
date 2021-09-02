@@ -1,7 +1,7 @@
 apiVersion: pulp.pulpproject.org/v1beta1
 kind: Pulp
 metadata:
-  name: example-pulp
+  name: azure-pulp
 spec:
   tag: "latest"
   ingress_type: Ingress

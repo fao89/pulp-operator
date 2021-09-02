@@ -20,8 +20,8 @@ fi
 if [[ -z "${QUAY_EXPIRE+x}" ]]; then
   echo "Deploy pulp-operator"
   sudo -E $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
-  export QUAY_IMAGE_TAG=$(python -c 'import yaml; print(yaml.safe_load(open("deploy/olm-catalog/pulp-operator/manifests/pulp-operator.clusterserviceversion.yaml"))["spec"]["version"])')
-  sed -i "s/\.dev//g" deploy/olm-catalog/pulp-operator/manifests/pulp-operator.clusterserviceversion.yaml
+  export QUAY_IMAGE_TAG=$(cat Makefile | grep "VERSION ?=" | cut -d' ' -f3)
+  sed -i "s/\.dev//g" Makefile
 
 
   echo $QUAY_IMAGE_TAG

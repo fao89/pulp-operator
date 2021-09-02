@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.0.1
+VERSION ?= 0.4.0.dev
 # Default bundle image tag
 BUNDLE_IMG ?= pulp-operator-bundle:$(VERSION)
 # Options for 'bundle-build'

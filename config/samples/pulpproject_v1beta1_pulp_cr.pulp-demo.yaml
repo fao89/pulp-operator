@@ -1,7 +1,7 @@
 apiVersion: pulp.pulpproject.org/v1beta1
 kind: Pulp
 metadata:
-  name: example-pulp
+  name: pulp-demo
 spec:
   storage_type: File
   # This doesn't really matter for minikube. Single node by design,

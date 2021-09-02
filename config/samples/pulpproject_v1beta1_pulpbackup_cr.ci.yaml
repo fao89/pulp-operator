@@ -2,6 +2,6 @@
 apiVersion: pulp.pulpproject.org/v1beta1
 kind: PulpBackup
 metadata:
-  name: example-pulpbackup
+  name: ci-pulpbackup
 spec:
   deployment_name: example-pulp

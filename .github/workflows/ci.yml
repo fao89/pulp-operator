@@ -38,6 +38,7 @@ jobs:
       - name: Start minikube
         run: |
           minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube addons enable metrics-server
       - name: Try the cluster !
         run: kubectl get pods -A
       - name: Setup a minikube docker env
@@ -66,11 +67,12 @@ jobs:
           sudo mv popeye /usr/local/bin/
           sudo chmod +x /usr/local/bin/popeye
           echo ::endgroup::
-          sudo popeye --kubeconfig ~/.kube/config || true
+          sudo popeye --kubeconfig ~/.kube/config
       - name: Logs
         if: always()
         run: |
           sudo -E docker images
+          sudo -E kubectl top pods
           .github/workflows/scripts/show_logs.sh
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24880/pulp/api/v3/status/
 
@@ -99,6 +101,7 @@ jobs:
       - name: Start minikube
         run: |
           minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A
@@ -114,7 +117,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:latest
+          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
           sudo -E docker images
         shell: bash
       - name: Deploy pulp-operator to K8s
@@ -131,7 +134,7 @@ jobs:
           sudo mv popeye /usr/local/bin/
           sudo chmod +x /usr/local/bin/popeye
           echo ::endgroup::
-          sudo popeye --kubeconfig ~/.kube/config || true
+          sudo popeye --kubeconfig ~/.kube/config
       - name: Test all components
         run: |
           git clone --depth=1 https://github.com/pulp/pulp_file.git
@@ -143,6 +146,7 @@ jobs:
         if: always()
         run: |
           sudo -E docker images
+          sudo -E kubectl top pods
           .github/workflows/scripts/show_logs.sh
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24880/pulp/api/v3/status/
 
@@ -171,6 +175,7 @@ jobs:
       - name: Start minikube
         run: |
           minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A
@@ -203,7 +208,7 @@ jobs:
           sudo mv popeye /usr/local/bin/
           sudo chmod +x /usr/local/bin/popeye
           echo ::endgroup::
-          sudo popeye --kubeconfig ~/.kube/config || true
+          sudo popeye --kubeconfig ~/.kube/config
       - name: Test
         run: sudo -E .ci/scripts/galaxy_ng-tests.sh -m
         shell: bash
@@ -211,6 +216,7 @@ jobs:
         if: always()
         run: |
           sudo -E docker images
+          sudo -E kubectl top pods
           .github/workflows/scripts/show_logs.sh
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24880/pulp/api/v3/status/
 
@@ -306,6 +312,7 @@ jobs:
       - name: Start minikube
         run: |
           minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A

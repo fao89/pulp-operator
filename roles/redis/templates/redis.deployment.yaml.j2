@@ -41,7 +41,6 @@ spec:
       affinity:
         nodeAffinity: {{ affinity.node_affinity }}
 {% endif %}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: redis
           image: "{{ redis_image }}"

@@ -39,7 +39,6 @@ spec:
       affinity:
         nodeAffinity: {{ affinity.node_affinity }}
 {% endif %}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: web
           image: "{{ registry }}/{{ project }}/{{ image_web }}:{{ tag }}"

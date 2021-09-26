@@ -69,7 +69,6 @@ spec:
 {% endif %}
         - name: {{ ansible_operator_meta.name }}-ansible-tmp
           emptyDir: {}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: worker
           image: "{{ registry }}/{{ project }}/{{ image }}:{{ tag }}"

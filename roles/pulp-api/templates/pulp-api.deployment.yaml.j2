@@ -83,7 +83,6 @@ spec:
               - path: container_auth_private_key.pem
                 key: container_auth_private_key.pem
 {% endif %}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: api
           image: "{{ registry }}/{{ project }}/{{ image }}:{{ tag }}"

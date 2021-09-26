@@ -67,7 +67,6 @@ spec:
         - name: tmp-file-storage
           emptyDir: {}
 {% endif %}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: resource-manager
           image: "{{ registry }}/{{ project }}/{{ image }}:{{ tag }}"

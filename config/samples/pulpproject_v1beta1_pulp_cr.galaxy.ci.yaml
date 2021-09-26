@@ -32,7 +32,7 @@ spec:
         cpu: 800m
         memory: 1Gi
   web:
-    replicas: 2
+    replicas: 1
     resource_requirements:
       requests:
         cpu: 100m

@@ -198,6 +198,9 @@ jobs:
       - name: Check and wait pulp-operator deploy
         run: .ci/scripts/pulp-operator-check-and-wait.sh -m
         shell: bash
+      - name: KubeLinter
+        run: .ci/scripts/kubelinter.sh
+        shell: bash
       - name: Popeye
         run: |
           echo ::group::POPEYE

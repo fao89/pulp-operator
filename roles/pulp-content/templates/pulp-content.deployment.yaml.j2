@@ -64,7 +64,6 @@ spec:
           persistentVolumeClaim:
             claimName: {{ ansible_operator_meta.name }}-file-storage
 {% endif %}
-      serviceAccountName: pulp-operator-sa
       containers:
         - name: content
           image: "{{ registry }}/{{ project }}/{{ image }}:{{ tag }}"

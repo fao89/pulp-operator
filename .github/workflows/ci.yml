@@ -210,6 +210,9 @@ jobs:
       - name: Test
         run: sudo -E .ci/scripts/galaxy_ng-tests.sh -m
         shell: bash
+      - name: Debugging with tmate
+        if: failure()
+        uses: mxschmitt/action-tmate@v3.6
       - name: Logs
         if: always()
         run: |

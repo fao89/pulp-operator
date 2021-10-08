@@ -208,7 +208,9 @@ jobs:
           echo ::endgroup::
           sudo popeye --kubeconfig ~/.kube/config || true
       - name: Test
-        run: sudo -E .ci/scripts/galaxy_ng-tests.sh -m
+        run: |
+          sudo -E .ci/scripts/galaxy_ng-tests.sh -m
+          CI_TEST=galaxy .ci/scripts/backup_and_restore.sh -m
         shell: bash
       - name: Logs
         if: always()

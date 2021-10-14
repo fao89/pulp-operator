@@ -14,6 +14,7 @@ sudo mv ./kind /usr/local/bin/kind
 make kustomize
 kustomize version
 
+echo "RUN cp /etc/ansible/ansible.cfg \${HOME}/.ansible.cfg && echo 'callback_whitelist = profile_tasks' >> \${HOME}/.ansible.cfg" | tee -a Dockerfile
 sed -i "s/ReadWriteMany/ReadWriteOnce/g" config/samples/pulpproject_v1beta1_pulp_cr.ci.yaml
 find ./roles/*/templates/*.yaml.j2 -exec sed -i 's/pulp-operator-sa/osdk-sa/g' {} \;
 

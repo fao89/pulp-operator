@@ -95,6 +95,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
+          echo RUN cp /etc/ansible/ansible.cfg ${HOME}/.ansible.cfg && echo "callback_whitelist = profile_tasks" >> ${HOME}/.ansible.cfg | tee -a Dockerfileecho "RUN cp /etc/ansible/ansible.cfg \${HOME}/.ansible.cfg && echo 'callback_whitelist = profile_tasks' >> \${HOME}/.ansible.cfg" | tee -a Dockerfile
           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
           sudo -E docker images
         shell: bash
@@ -167,6 +168,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
+          echo "RUN cp /etc/ansible/ansible.cfg \${HOME}/.ansible.cfg && echo 'callback_whitelist = profile_tasks' >> \${HOME}/.ansible.cfg" | tee -a Dockerfile
           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
           sudo -E docker images
         shell: bash
@@ -247,6 +249,7 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
+          echo "RUN cp /etc/ansible/ansible.cfg \${HOME}/.ansible.cfg && echo 'callback_whitelist = profile_tasks' >> \${HOME}/.ansible.cfg" | tee -a Dockerfile
           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
           sudo -E docker images
         shell: bash

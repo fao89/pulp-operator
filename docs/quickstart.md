@@ -44,7 +44,7 @@ metadata:
  namespace: openshift-marketplace
 spec:
  sourceType: grpc
- image: quay.io/pulp/pulp-operator-catalog:v0.4.0.dev
+ image: quay.io/pulp/pulp-operator-catalog:v0.4.0
 
 ```
 

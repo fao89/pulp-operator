@@ -176,14 +176,14 @@ metadata:
       ]
     capabilities: Seamless Upgrades
     categories: Integration & Delivery
-    containerImage: quay.io/pulp/pulp-operator:v0.5.0.dev
+    containerImage: quay.io/pulp/pulp-operator:v0.4.0
     createdAt: "2021-03-26 16:57:40"
     description: Pulp is a platform for managing repositories of software packages
       and making them available to a large number of consumers.
     operators.operatorframework.io/builder: operator-sdk-v1.12.0
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     repository: https://github.com/pulp/pulp-operator
-  name: pulp-operator.v0.5.0
+  name: pulp-operator.v0.4.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -807,7 +807,7 @@ spec:
                   value: explicit
                 - name: ANSIBLE_DEBUG_LOGS
                   value: "false"
-                image: quay.io/pulp/pulp-operator:v0.5.0.dev
+                image: quay.io/pulp/pulp-operator:v0.4.0
                 livenessProbe:
                   httpGet:
                     path: /readyz
@@ -995,4 +995,4 @@ spec:
   provider:
     name: Pulp Community
     url: https://github.com/pulp/pulp-operator
-  version: 0.5.0
+  version: 0.4.0

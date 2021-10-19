@@ -10,4 +10,4 @@ images:
         - pulp_container
         - pulp_python
 registry: quay.io
-project: pulp
+project: fabricio_aguiar

@@ -10,4 +10,4 @@ images:
         - pulp_container
         - galaxy_ng
 registry: quay.io
-project: pulp
+project: fabricio_aguiar

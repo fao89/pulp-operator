@@ -9,7 +9,7 @@
 # Pulp is an organization (not an individual user account) on Quay:
 # https://quay.io/organization/pulp
 # For test publishes, one can override this to any org or user.
-QUAY_PROJECT_NAME=${QUAY_PROJECT_NAME:-pulp}
+QUAY_PROJECT_NAME=${QUAY_PROJECT_NAME:-fabricio_aguiar}
 # The image name, AKA the Quay repo
 QUAY_REPO_NAME=${QUAY_REPO_NAME:-pulp-operator}
 # The image tag

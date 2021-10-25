@@ -52,7 +52,7 @@
 
 - name: Get installed plugins
   set_fact:
-    installed_plugins: "{{ result.json.versions | items2dict(key_name='component', value_name='version')) }}"
+    installed_plugins: "{{ result.json.versions | items2dict(key_name='component', value_name='version') }}"
 
 - name: Show installed plugins
   debug:

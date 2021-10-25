@@ -142,7 +142,7 @@ jobs:
         env:
           PY_COLORS: '1'
       - name: bla
-        if: failure()
+        if: always()
         uses: mxschmitt/action-tmate@v3.7
 
       - name: Logs

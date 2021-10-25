@@ -141,6 +141,10 @@ jobs:
         shell: bash
         env:
           PY_COLORS: '1'
+      - name: bla
+        if: failure()
+        uses: mxschmitt/action-tmate@v3.7
+
       - name: Logs
         if: always()
         run: |

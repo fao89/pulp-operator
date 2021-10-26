@@ -9,7 +9,7 @@ spec:
   # stick to our default.
   file_storage_access_mode: "ReadWriteMany"
   # The minikube VM won't go any larger.
-  file_storage_size: "375Gi"
+  file_storage_size: "50Gi"
   # Default images:
-  image: quay.io/pulp/pulp:stable
-  image_web: quay.io/pulp/pulp-web:stable
+  image: quay.io/pulp/pulp:3.15.2
+  image_web: quay.io/pulp/pulp-web:3.15.2

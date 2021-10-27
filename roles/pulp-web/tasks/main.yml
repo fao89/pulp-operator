@@ -22,8 +22,7 @@
 
 - name: Set pulp-api image URL
   set_fact:
-    _image_web: "{{ _custom_image_web | default(lookup('env', 'RELATED_IMAGE_APP_WEB')) }}"
-
+    _image_web: "{{ _custom_image_web | default(lookup('env', 'RELATED_IMAGE_PULP_WEB')) | default(image_web) }}"
 
 - name: pulp-web deployment
   k8s:

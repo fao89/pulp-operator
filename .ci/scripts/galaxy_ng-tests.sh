@@ -94,8 +94,8 @@ wait_until_task_finished() {
 echo "Creating community namespace"
 curl -X POST -d '{"name": "community", "groups":[]}' -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/v3/namespaces/
 
-echo "Upload community.kubernetes collection"
-ansible-galaxy collection publish -vvvv -c ./vendor/galaxy.ansible.com/community/kubernetes/community-kubernetes-1.2.1.tar.gz
+echo "Upload kubernetes.core collection"
+ansible-galaxy collection publish -vvvv -c ./vendor/galaxy.ansible.com/kubernetes/core/kubernetes-core-2.2.0.tar.gz
 
 echo "Check if it was uploaded"
 curl -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/staging/v3/collections/ | jq

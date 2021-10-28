@@ -19,5 +19,6 @@ images:
         - "git+https://github.com/pulp/pulp_deb.git"
         - "git+https://github.com/pulp/pulp_python.git"
         - "git+https://github.com/pulp/pulp_rpm.git"
+        - "git+https://github.com/ansible/galaxy-importer.git"
 registry: quay.io
 project: pulp

@@ -1,7 +1,7 @@
 images:
   - galaxy_web_master:
       image_name: galaxy-web
-      tag: latest
+      tag: azure
       container_file: Containerfile.web
       base_image_name: galaxy
       python_version: "3.9"

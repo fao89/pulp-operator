@@ -3,9 +3,9 @@
 
 if [[ "$CI_TEST" == "galaxy" ]]; then
   echo "Deploy galaxy latest"
-  sudo -E QUAY_REPO_NAME=galaxy $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+  sudo -E QUAY_REPO_NAME=galaxy QUAY_IMAGE_TAG=azure $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
   echo "Deploy galaxy-web latest"
-  sudo -E QUAY_REPO_NAME=galaxy-web $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
+  sudo -E QUAY_REPO_NAME=galaxy-web QUAY_IMAGE_TAG=azure $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh
 else
   echo "Deploy pulp latest"
   sudo -E QUAY_REPO_NAME=pulp $GITHUB_WORKSPACE/.ci/scripts/quay-push.sh

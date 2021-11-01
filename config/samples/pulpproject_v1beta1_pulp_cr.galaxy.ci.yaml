@@ -4,9 +4,9 @@ metadata:
   name: example-pulp
 spec:
   image: quay.io/pulp/galaxy
-  image_version: latest
+  image_version: azure
   image_web: quay.io/pulp/galaxy-web
-  image_web_version: latest
+  image_web_version: azure
   admin_password_secret: "example-pulp-admin-password"
   storage_type: File
   ingress_type: nodeport

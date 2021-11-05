@@ -8,6 +8,7 @@ spec:
   image_web: quay.io/pulp/galaxy-web
   image_web_version: latest
   admin_password_secret: "example-pulp-admin-password"
+  sso_secret: galaxysso
   storage_type: File
   ingress_type: nodeport
   ######## Enable Execution Environments ########

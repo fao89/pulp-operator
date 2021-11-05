@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: galaxysso
+stringData:
+  social_auth_keycloak_key: AH
+  social_auth_keycloak_secret: social_auth_keycloak_secret_name
+  social_auth_keycloak_public_key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApHJham8oMwUwEyC75r2RdNHi+tt0wNo9u1mX3Gm/8iqNdw4LyHoHAryM27S6WMSJkqG8LRQhpw2Wx1IXYJfhXelBU2s6Jo6psuq7FzAL0hsj5YRFtXtmUWykkWo6K12tl37AhKz6Be6wp+mcjb1rZT8UCKboDfA5CUZAK7XFAR7AcFuGuVlTzFXKzFeNZ7joYT4LX+3ugqQJweE6NacKrd9rTFIU8/cgFprKDwxMsOgq3Gf11GOnHe0InrhkievxMVYrzd/SgDOqO+sZ0go6t98e5BI/ZGraBPfsOBz6Cp2mM/WkMxzxz/OtFdcuP5QC0lhtugC9MTOS8ku3pXkPuQIDAQAB"
+  keycloak_host: keycloak.com
+  keycloak_protocol: https
+  keycloak_port: "443"
+  keycloak_realm: ansible-automation

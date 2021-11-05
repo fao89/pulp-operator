@@ -221,6 +221,9 @@ jobs:
           sudo -E docker images
           .github/workflows/scripts/show_logs.sh
           http --timeout 30 --check-status --pretty format --print hb http://localhost:24880/pulp/api/v3/status/ || true
+      - name: debug
+        if: always()
+        uses: mxschmitt/action-tmate@v3.7
 
   molecule:
     runs-on: ubuntu-latest

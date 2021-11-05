@@ -51,13 +51,13 @@ do
     fi
 done
 
-podman pull quay.io/pulp/pulp-operator:devel
-podman login --tls-verify=false -u admin -p password localhost:24880
-podman tag quay.io/pulp/pulp-operator:devel localhost:24880/pulp/pulp-operator:devel
-podman push --tls-verify=false localhost:24880/pulp/pulp-operator:devel
+# podman pull quay.io/pulp/pulp-operator:devel
+# podman login --tls-verify=false -u admin -p password localhost:24880
+# podman tag quay.io/pulp/pulp-operator:devel localhost:24880/pulp/pulp-operator:devel
+# podman push --tls-verify=false localhost:24880/pulp/pulp-operator:devel
 
 
-curl -H "Authorization:Token $TOKEN" http://localhost:24880/api/galaxy/_ui/v1/execution-environments/repositories/ | jq
+# curl -H "Authorization:Token $TOKEN" http://localhost:24880/api/galaxy/_ui/v1/execution-environments/repositories/ | jq
 
 cat >> ansible.cfg << ANSIBLECFG
 [defaults]
@@ -108,16 +108,16 @@ ansible-galaxy collection publish -vvvv -c ./vendor/galaxy.ansible.com/kubernete
 echo "Check if it was uploaded"
 curl -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/staging/v3/collections/ | jq
 
-echo "Sync collections"
-curl -X PUT -d '{"requirements_file": "collections: \n - pulp.pulp_installer", "url": "https://galaxy.ansible.com/api/"}' -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/community/v3/sync/config/ | jq
-TASK_PK=$(curl -X POST -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/community/v3/sync/ | jq -r '.task')
-echo "$BASE_ADDR/pulp/api/v3/tasks/$TASK_PK/"
-wait_until_task_finished "$BASE_ADDR/pulp/api/v3/tasks/$TASK_PK/"
+# echo "Sync collections"
+# curl -X PUT -d '{"requirements_file": "collections: \n - pulp.pulp_installer", "url": "https://galaxy.ansible.com/api/"}' -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/community/v3/sync/config/ | jq
+# TASK_PK=$(curl -X POST -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/community/v3/sync/ | jq -r '.task')
+# echo "$BASE_ADDR/pulp/api/v3/tasks/$TASK_PK/"
+# wait_until_task_finished "$BASE_ADDR/pulp/api/v3/tasks/$TASK_PK/"
 
-echo "Install pulp.pulp_installer collection"
-mkdir -p /tmp/ci_test
-sed -i "s/inbound-kubernetes/community/g" ansible.cfg
-ansible-galaxy collection install -vvvv pulp.pulp_installer -c -p /tmp/ci_test
-tree -L 3 /tmp/ci_test
+# echo "Install pulp.pulp_installer collection"
+# mkdir -p /tmp/ci_test
+# sed -i "s/inbound-kubernetes/community/g" ansible.cfg
+# ansible-galaxy collection install -vvvv pulp.pulp_installer -c -p /tmp/ci_test
+# tree -L 3 /tmp/ci_test
 
 exit $GALAXY_INIT_RESULT

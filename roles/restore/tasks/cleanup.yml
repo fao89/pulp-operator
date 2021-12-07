@@ -78,6 +78,10 @@
     - container_token_secret is defined
     - container_token_secret | length
 
+- name: DEBUG sso
+  debug:
+    var: sso_secret
+
 - name: Remove ownerReferences from sso secret to avoid garbage collection
   k8s:
     definition:

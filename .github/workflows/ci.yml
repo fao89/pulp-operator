@@ -134,6 +134,8 @@ jobs:
           sudo chmod +x /usr/local/bin/popeye
           echo ::endgroup::
           sudo popeye --kubeconfig ~/.kube/config || true
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3.8
       - name: Test all components
         run: |
           git clone --depth=1 https://github.com/pulp/pulp_file.git

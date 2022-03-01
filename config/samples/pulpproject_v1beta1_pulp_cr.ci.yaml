@@ -3,40 +3,39 @@ kind: Pulp
 metadata:
   name: example-pulp
 spec:
-  image_version: latest
-  image_web_version: latest
-  admin_password_secret: "example-pulp-admin-password"
-  storage_type: File
   ingress_type: nodeport
-  # k3s local-path requires this
-  file_storage_access_mode: "ReadWriteMany"
-  # We have a little over 10GB free on GHA VMs/instances
-  file_storage_size: "10Gi"
-  container_token_secret: "container-auth"
-  content:
-    replicas: 1
-    resource_requirements:
-      requests:
-        cpu: 150m
-        memory: 256Mi
-      limits:
-        cpu: 800m
-        memory: 1Gi
-  worker:
-    replicas: 1
-    resource_requirements:
-      requests:
-        cpu: 150m
-        memory: 256Mi
-      limits:
-        cpu: 800m
-        memory: 1Gi
+  loadbalancer_port: 80
+  file_storage_size: 10Gi
+  image_pull_policy: Always
+  image_web_version: latest
+  image_web: quay.io/pulp/pulp-web
+  image_version: latest
+  admin_password_secret: "example-pulp-admin-password"
   web:
     replicas: 1
-    resource_requirements:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: 800m
-        memory: 1Gi
+  file_storage_access_mode: ReadWriteMany
+  content:
+    log_level: INFO
+    replicas: 2
+  postgres_storage_requirements:
+    limits:
+      storage: 50Gi
+    requests:
+      storage: 8Gi
+  api:
+    log_level: INFO
+    replicas: 1
+  postgres_resource_requirements:
+    limits:
+      cpu: 1000m
+      memory: 8Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+  image: quay.io/pulp/pulp
+  loadbalancer_protocol: http
+  resource_manager:
+    replicas: 1
+  storage_type: File
+  worker:
+    replicas: 2

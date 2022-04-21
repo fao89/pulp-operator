@@ -1,5 +1,9 @@
 apiVersion: v1
-{% if image_pull_secrets is defined %}
+{% if image_pull_secret is defined %}
+# image_pull_secret is deprecated in favor of image_pull_secrets
+imagePullSecrets:
+  - name: {{ image_pull_secret }}
+{% elif image_pull_secrets | length > 0 %}
 imagePullSecrets:
 {% for secret in image_pull_secrets %}
 - name: {{ secret }}

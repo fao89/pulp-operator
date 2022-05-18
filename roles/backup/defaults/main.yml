@@ -21,3 +21,5 @@ custom_resource_key: '_pulp_pulpproject_org_pulpbackup'
 database_type: 'unmanaged'
 
 azure_container_path: ''
+
+# postgres_version: 13

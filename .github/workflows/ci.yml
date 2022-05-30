@@ -318,14 +318,12 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [insta, components, molecule, galaxy]
     strategy:
       fail-fast: false
       # Testing different python versions because of
       # https://pulp.plan.io/issues/5768#note-17
       matrix:
         include:
-          - CI_TEST: true
           - CI_TEST: galaxy
     steps:
       - uses: actions/checkout@v2

@@ -139,7 +139,7 @@ spec:
             - name: PULP_SIGNING_KEY_FINGERPRINT
               value: "{{ signing_key_fingerprint }}"
             - name: SIGNING_SERVICE
-              value: "{{ __pulp_common_merged_pulp_settings.galaxy_collection_signing_service }}"
+              value: "{{ pulp_combined_settings.galaxy_collection_signing_service }}"
 {% endif %}
           ports:
             - protocol: TCP

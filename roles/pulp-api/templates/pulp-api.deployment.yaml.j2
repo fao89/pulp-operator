@@ -193,11 +193,11 @@ spec:
               mountPath: "/var/lib/pulp/scripts"
               subPath: scripts
               readOnly: true
-            - name: name: {{ ansible_operator_meta.name }}-signing-galaxy
+            - name: {{ ansible_operator_meta.name }}-signing-galaxy
               mountPath: "/etc/pulp/keys/galaxy_signing_service.gpg"
               subPath: galaxy_signing_service.gpg
               readOnly: true
-            - name: name: {{ ansible_operator_meta.name }}-signing-galaxy
+            - name: {{ ansible_operator_meta.name }}-signing-galaxy
               mountPath: "/etc/pulp/keys/galaxy_signing_service.asc"
               subPath: galaxy_signing_service.asc
               readOnly: true

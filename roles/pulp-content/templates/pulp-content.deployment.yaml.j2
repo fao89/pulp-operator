@@ -122,10 +122,6 @@ spec:
               value: "{{ gunicorn_timeout }}"
             - name: PULP_CONTENT_WORKERS
               value: "{{ gunicorn_content_workers }}"
-{% if galaxy_signing_secret is defined %}
-            - name: PULP_SIGNING_KEY_FINGERPRINT
-              value: "{{ signing_key_fingerprint }}"
-{% endif %}
           ports:
             - protocol: TCP
               containerPort: 24816
@@ -141,12 +137,7 @@ spec:
               subPath: scripts
               readOnly: true
             - name: name: {{ ansible_operator_meta.name }}-signing-galaxy
-              mountPath: "/etc/pulp/keys/galaxy_signing_service.gpg"
-              subPath: galaxy_signing_service.gpg
-              readOnly: true
-            - name: name: {{ ansible_operator_meta.name }}-signing-galaxy
-              mountPath: "/etc/pulp/keys/galaxy_signing_service.asc"
-              subPath: galaxy_signing_service.asc
+              mountPath: "/etc/pulp/keys/"
               readOnly: true
 {% endif %}
 {% if is_file_storage %}

@@ -55,7 +55,7 @@ echo "Waiting for services to come up ..."
 # Once the services are both up, the pods will be in a Pending state.
 # Before the services are both up, the pods may not exist at all.
 # So check for the services being up 1st.
-for tries in {0..90}; do
+for tries in {0..60}; do
   services=$(sudo -E $KUBECTL get services)
   if [[ $(echo "$services" | grep -c NodePort) > 0 ]]; then
     # parse string like this. 30805 is the external port
@@ -95,7 +95,7 @@ echo "Waiting for pods to transition to Running ..."
 # NOTE: Before the pods can be started, they must be downloaded/cached from
 # quay.io .
 # Therefore, this wait is highly dependent on network speed.
-for tries in {0..180}; do
+for tries in {0..60}; do
   pods=$(sudo -E $KUBECTL get pods -o wide)
   if [[ $(echo "$pods" | grep -c -v -E "STATUS|Running") -eq 0 && $(echo "$pods" | grep -c "web") -eq 1 ]]; then
     echo "PODS:"
@@ -152,7 +152,7 @@ fi
 # http: error: Request timed out (5.0s).
 #
 # --pretty format --print hb almost make it behave as if it were not redirected
-for tries in {0..180}; do
+for tries in {0..60}; do
   if [[ $tries -eq 180 ]]; then
     echo "ERROR 4: Status page never accessible or returning success"
     storage_debug
@@ -207,8 +207,8 @@ echo "Transistion to test output ..."
 
 for iteration in {5..8};do
     index=$(($iteration - 5))
-    for tries in {0..120}; do
-    if [[ $tries -eq 120 ]]; then
+    for tries in {0..60}; do
+    if [[ $tries -eq 60 ]]; then
         echo ${error_messages[$index]}
         storage_debug
         echo "$output"

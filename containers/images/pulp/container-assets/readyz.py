@@ -18,7 +18,7 @@ if not data["online_content_apps"]:
 if not data["database_connection"]["connected"]:
     sys.exit(3)
 
-if os.getenv("REDIS_SERVICE_HOST") and data["redis_connection"]["connected"]:
+if os.getenv("REDIS_SERVICE_HOST") and not data["redis_connection"]["connected"]:
     sys.exit(4)
 
 sys.exit(0)

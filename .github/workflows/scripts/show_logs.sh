@@ -9,6 +9,7 @@ fi
 
 sudo -E kubectl get pods -o wide
 sudo -E kubectl get deployments
+sudo -E kubectl get pods --output=json | jq --raw-output '.items | map([.metadata.name, (.status.containerStatuses | map(.name + ": " + (.ready | tostring)))[]]) | .[] | join("\n  ")'
 
 if [[ "$KUBE" == "minikube" ]]; then
   echo ::group::METRICS
@@ -51,3 +52,5 @@ echo ::endgroup::
 echo ::group::OBJECTS
 sudo -E kubectl get pulp,pulpbackup,pulprestore,pvc,configmap,serviceaccount,secret,networkpolicy,ingress,service,deployment,statefulset,hpa,job,cronjob -o yaml
 echo ::endgroup::
+
+sudo -E kubectl get pods -o go-template='{{range .items}} {{.metadata.name}} {{range .status.containerStatuses}} {{.lastState.terminated.exitCode}} {{end}}{{"\n"}} {{end}}'

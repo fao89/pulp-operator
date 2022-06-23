@@ -118,7 +118,7 @@ spec:
                 - /usr/local/bin/pulpcore-manager
                 - shell
                 - -c
-                - 'import sys;import socket;from pulpcore.app.models.task import Worker;any([w.online for w in Worker.objects.online_workers().filter(name__endswith=socket.getfqdn())]) or sys.exit(1)'
+                - 'import sys;import socket;from datetime import timedelta;from django.utils import timezone;from pulpcore.app.models.task import Worker;age_threshold = timezone.now() - timedelta(seconds=30);Worker.objects.filter(name__endswith=socket.getfqdn(), last_heartbeat__gte=age_threshold).count() or sys.exit(1)'
             failureThreshold: 10
             initialDelaySeconds: 30
             periodSeconds: 25

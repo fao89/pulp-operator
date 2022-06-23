@@ -126,7 +126,7 @@ spec:
                 - /usr/local/bin/pulpcore-manager
                 - shell
                 - -c
-                - 'import sys;import socket;from pulpcore.app.models.status import ContentAppStatus;any([o.online for o in ContentAppStatus.objects.online().filter(name__endswith=socket.gethostname())]) or sys.exit(1)'
+                - 'import sys;import socket;from datetime import timedelta;from django.utils import timezone;from pulpcore.app.models.status import ContentAppStatus;age_threshold = timezone.now() - timedelta(seconds=30);ContentAppStatus.objects.filter(name__endswith=socket.gethostname(), last_heartbeat__gte=age_threshold).count() or sys.exit(1)'
             failureThreshold: 10
             initialDelaySeconds: 30
             periodSeconds: 25

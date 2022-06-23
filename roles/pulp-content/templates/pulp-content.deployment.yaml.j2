@@ -123,14 +123,11 @@ spec:
           readinessProbe:
             exec:
               command:
-                - /usr/local/bin/pulpcore-manager
-                - shell
-                - -c
-                - 'import sys;import socket;from datetime import timedelta;from django.utils import timezone;from pulpcore.app.models.status import ContentAppStatus;age_threshold = timezone.now() - timedelta(seconds=30);ContentAppStatus.objects.filter(name__endswith=socket.gethostname(), last_heartbeat__gte=age_threshold).count() or sys.exit(1)'
+                - /usr/bin/readyz.py
             failureThreshold: 10
             initialDelaySeconds: 30
-            periodSeconds: 25
-            timeoutSeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
           volumeMounts:
             - name: {{ ansible_operator_meta.name }}-server
               mountPath: "/etc/pulp/settings.py"

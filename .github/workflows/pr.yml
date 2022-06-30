@@ -78,7 +78,7 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=docker --container-runtime=containerd --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
@@ -147,7 +147,7 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=docker --container-runtime=containerd --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
@@ -233,7 +233,7 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=docker --container-runtime=containerd --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !

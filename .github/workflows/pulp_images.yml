@@ -27,7 +27,7 @@ jobs:
         run: |
           echo ::group::HTTPIE
           sudo apt-get update -yq
-          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
+           apt-get -yq --no-install-suggests --no-install-recommends install httpie
           echo ::endgroup::
           echo "HTTPIE_CONFIG_DIR=$GITHUB_WORKSPACE/.ci/assets/httpie/" >> $GITHUB_ENV
           pip install podman-compose
@@ -59,7 +59,7 @@ jobs:
         if: always()
         run: |
           podman ps -a
-          podman images -a
+          sudo -E podman images -a
           podman logs --tail=10000 containers_pulp_api_1
           podman logs --tail=10000 containers_pulp_content_1
           podman logs --tail=10000 containers_pulp_worker_1

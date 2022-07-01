@@ -38,12 +38,12 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=podman --container-runtime=cri-o --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
       - name: Try the cluster !
         run: kubectl get pods -A
-      - name: Setup a minikube docker env
-        run: minikube -p minikube docker-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
+      - name: Setup a minikube podman env
+        run: minikube -p minikube podman-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
       - name: Uninstalling GHA kustomize
         run: |
           # hack for uninstalling kustomize from GHA
@@ -54,11 +54,11 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
-          sudo -E docker images
+           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
+           sudo -E podman images
         shell: bash
       - name: Test insta-demo
-        run: sudo -E insta-demo/pulp-insta-demo.sh -m
+        run:  insta-demo/pulp-insta-demo.sh -m
         shell: bash
       - name: Popeye
         run: |
@@ -97,13 +97,13 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=podman --container-runtime=cri-o --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A
-      - name: Setup a minikube docker env
-        run: minikube -p minikube docker-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
+      - name: Setup a minikube podman env
+        run: minikube -p minikube podman-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
       - name: Uninstalling GHA kustomize
         run: |
           # hack for uninstalling kustomize from GHA
@@ -114,11 +114,11 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
-          sudo -E docker images
+           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
+           sudo -E podman images
         shell: bash
       - name: Deploy pulp-operator to K8s
-        run: sudo -E ./up.sh
+        run:  ./up.sh
         shell: bash
       - name: Check and wait pulp-operator deploy
         run: .ci/scripts/pulp-operator-check-and-wait.sh -m
@@ -176,13 +176,13 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=podman --container-runtime=cri-o --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A
-      - name: Setup a minikube docker env
-        run: minikube -p minikube docker-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
+      - name: Setup a minikube podman env
+        run: minikube -p minikube podman-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
       - name: Uninstalling GHA kustomize
         run: |
           # hack for uninstalling kustomize from GHA
@@ -193,15 +193,15 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
-          sudo -E docker images
+           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
+           sudo -E podman images
         shell: bash
       - name: Prepare Object Storage
         run: |
           .ci/scripts/prepare-object-storage.sh
         shell: bash
       - name: Deploy pulp-operator to K8s
-        run: sudo -E CI_TEST=galaxy ./up.sh
+        run:  CI_TEST=galaxy ./up.sh
         shell: bash
       - name: Check and wait pulp-operator deploy
         run: .ci/scripts/pulp-operator-check-and-wait.sh -m
@@ -216,7 +216,7 @@ jobs:
           echo ::endgroup::
           sudo popeye --kubeconfig ~/.kube/config || true
       - name: Test
-        run: sudo -E .ci/scripts/galaxy_ng-tests.sh -m
+        run:  .ci/scripts/galaxy_ng-tests.sh -m
         shell: bash
       - name: Backup & Restore
         run: CI_TEST=galaxy .ci/scripts/backup_and_restore.sh -m
@@ -335,13 +335,13 @@ jobs:
         shell: bash
       - name: Start minikube
         run: |
-          minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=80-32000
+          minikube start --driver=podman --container-runtime=cri-o --extra-config=apiserver.service-node-port-range=80-32000
           minikube addons enable metrics-server
         # now you can run kubectl to see the pods in the cluster
       - name: Try the cluster !
         run: kubectl get pods -A
-      - name: Setup a minikube docker env
-        run: minikube -p minikube docker-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
+      - name: Setup a minikube podman env
+        run: minikube -p minikube podman-env | grep "export" | sed 's/export //' | sed 's/"//g' >> $GITHUB_ENV
       - name: Uninstalling GHA kustomize
         run: |
           # hack for uninstalling kustomize from GHA
@@ -352,8 +352,8 @@ jobs:
         shell: bash
       - name: Build Operator
         run: |
-          sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
-          sudo -E docker images
+           sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel
+           sudo -E podman images
         shell: bash
       - name: Setting secrets
         run: python3 .github/workflows/scripts/secrets.py "$SECRETS_CONTEXT"
@@ -380,9 +380,9 @@ jobs:
           TEST=${{ matrix.CI_TEST }}
           echo $TEST
           if [[ "$TEST" == "galaxy" ]]; then
-            CURRENT_VERSION=$(docker run quay.io/pulp/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
+            CURRENT_VERSION=$(podman run quay.io/pulp/galaxy:latest bash -c 'pip3 show galaxy_ng | sed -n -e "s/Version: //p"')
           else
-            CURRENT_VERSION=$(docker run quay.io/pulp/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
+            CURRENT_VERSION=$(podman run quay.io/pulp/pulp:latest bash -c 'pip3 show pulpcore | sed -n -e "s/Version: //p"')
           fi
           echo $CURRENT_VERSION
           echo "QUAY_IMAGE_TAG=$CURRENT_VERSION-$(date +%j)" >> $GITHUB_ENV

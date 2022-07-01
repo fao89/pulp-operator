@@ -89,11 +89,11 @@ async def get_compatible_plugins(pulpcore_releases, total_releases=1):
 def to_deploy(images, tag):
     path = "$GITHUB_WORKSPACE/.ci/scripts/quay-push.sh"
     for image in images:
-        line = f'sudo -E QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="{tag}" \{path}'
+        line = f' QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="{tag}" \{path}'
         os.system(f"echo {line} >> .ci/scripts/deploy.sh")
         stable = f"quay.io/pulp/{image}:stable"
-        os.system(f"echo 'docker tag {image}:{tag} {stable}' >> .ci/scripts/deploy.sh")
-        line = f'sudo -E QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="stable" \{path}'
+        os.system(f"echo 'podman tag {image}:{tag} {stable}' >> .ci/scripts/deploy.sh")
+        line = f' QUAY_REPO_NAME={image} QUAY_IMAGE_TAG="stable" \{path}'
         os.system(f"echo {line} >> .ci/scripts/deploy.sh")
 
 

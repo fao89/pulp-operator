@@ -102,16 +102,16 @@ else
 fi
 if [ "$KUBE" == "k3s" ]; then
   echo "=================================== K3S Install ==================================="
-  sudo -E .ci/scripts/k3s-install.sh --insta-demo || failure_message
+   .ci/scripts/k3s-install.sh --insta-demo || failure_message
 fi
 if [ "$BRANCH" != "main" ] && [ "$KUBE" == "minikube" ]; then
   echo "=================================== Build Operator ==================================="
-  eval $(minikube -p minikube docker-env) || failure_message
-  sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel || failure_message
-  sudo -E docker images || failure_message
+  eval $(minikube -p minikube podman-env) || failure_message
+   sudo -E make docker-build IMG=quay.io/pulp/pulp-operator:devel || failure_message
+   sudo -E podman images || failure_message
 fi
 echo "=================================== Operator Up ==================================="
-sudo -E ./up.sh || failure_message
+ ./up.sh || failure_message
 echo "=================================== Check and wait ==================================="
 echo ""
 .ci/scripts/pulp-operator-check-and-wait.sh $KUBE_FLAG || test $? = 100 || failure_message

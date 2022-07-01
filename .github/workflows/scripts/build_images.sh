@@ -8,7 +8,6 @@ if [[ "$CI_TEST" == "galaxy" ]]; then
 else
   cp $GITHUB_WORKSPACE/.ci/ansible/pulp/vars.yaml vars/vars.yaml
 fi
-sed -i "s/podman/docker/g" common_tasks.yaml
 pip install ansible
 
 if [[ -z "${QUAY_EXPIRE+x}" ]]; then
@@ -27,7 +26,6 @@ if [[ "$CI_TEST" == "galaxy" ]]; then
 else
   cp $GITHUB_WORKSPACE/.ci/ansible/pulp/web/vars.yaml vars/vars.yaml
 fi
-sed -i "s/podman/docker/g" common_tasks.yaml
 
 if [[ -z "${QUAY_EXPIRE+x}" ]]; then
   ansible-playbook -v build.yaml
@@ -38,4 +36,4 @@ else
 fi
 cd $GITHUB_WORKSPACE
 
-docker images
+sudo -E podman images

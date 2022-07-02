@@ -81,7 +81,7 @@
     definition: "{{ lookup('template', 'pulp_object.yaml.j2') }}"
     wait: true
     wait_condition:
-      type: "Running"
+      type: "WebTasksFinished"
       status: "True"
 
 - name: Remove ownerReferences to prevent garbage collection of new CR

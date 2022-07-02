@@ -3,6 +3,7 @@
 - name: Set apiVersion and kind variables
   set_fact:
     api_version: '{{ hostvars["localhost"]["inventory_file"].split("/")[4:6] | join("/")  }}'
+    kind: '{{ hostvars["localhost"]["inventory_file"].split("/")[6]  }}'
 
 - name: Get object definition from pvc
   k8s_exec:
@@ -81,7 +82,7 @@
     definition: "{{ lookup('template', 'pulp_object.yaml.j2') }}"
     wait: true
     wait_condition:
-      type: "WebTasksFinished"
+      type: "{{ deployment_type|capitalize }}-Web-Ready"
       status: "True"
 
 - name: Remove ownerReferences to prevent garbage collection of new CR
@@ -93,3 +94,16 @@
         name: '{{ deployment_name }}'
         namespace: '{{ ansible_operator_meta.namespace }}'
         ownerReferences: null
+
+- name: Add deploy status
+  k8s_status:
+    api_version: "{{ api_version }}"
+    kind: "{{ kind }}"
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    conditions:
+      - type: "{{ deployment_type|capitalize }}-Deploy-Ready"
+        message: "{{ deployment_type|capitalize }} got deployed"
+        reason: DeployTasksFinished
+        status: "False"
+        lastTransitionTime: "{{ lookup('pipe', 'date --rfc-3339 seconds') }}"

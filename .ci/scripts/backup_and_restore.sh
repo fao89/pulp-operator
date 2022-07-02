@@ -37,7 +37,7 @@ $KUBECTL delete --cascade=foreground -f config/samples/$CUSTOM_RESOURCE
 $KUBECTL wait --for=delete -f config/samples/$CUSTOM_RESOURCE
 
 $KUBECTL apply -f config/samples/$RESTORE_RESOURCE
-time $KUBECTL wait --for condition=Pulp-Operator-Finished-Execution --timeout=900s -f config/samples/$RESTORE_RESOURCE || true
+time $KUBECTL wait --for condition=Pulp-Deploy-Ready --timeout=900s -f config/samples/$RESTORE_RESOURCE || true
 
 echo ::group::AFTER_RESTORE_LOGS
 $KUBECTL logs -l app.kubernetes.io/name=pulp-operator -c pulp-manager --tail=10000

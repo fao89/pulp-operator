@@ -10,8 +10,12 @@
   vars:
     max_retries: 5
     retry_delay: 5
-  when:
-    - ingress_type | lower == 'route'
+  # when:
+  #   - ingress_type | lower == 'route'
+
+- name: debug routes
+  debug:
+    var: _pulp_plugins
 
 - name: pulp routes
   k8s:

@@ -1,5 +1,4 @@
 ---
-
 - name: Set apiVersion and kind variables
   set_fact:
     api_version: '{{ hostvars["localhost"]["inventory_file"].split("/")[4:6] | join("/")  }}'

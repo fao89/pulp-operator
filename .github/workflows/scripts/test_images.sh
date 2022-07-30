@@ -22,11 +22,5 @@ if [[ -n "${QUAY_EXPIRE}" ]]; then
   echo "LABEL quay.expires-after=${QUAY_EXPIRE}d" >> ./build/Dockerfile
 fi
 sudo -E ./up.sh
-time $KUBECTL wait --for condition=Pulp-Operator-Finished-Execution pulp/example-pulp --timeout=-1s
-if [[ "$CI_TEST" == "galaxy" ]]; then
-  CI_TEST=true .ci/scripts/galaxy_ng-tests.sh -m
-else
-  .ci/scripts/retry.sh 3 ".ci/scripts/pulp_tests.sh -m"
-fi
 
 docker images

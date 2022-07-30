@@ -7,6 +7,7 @@ API_ROOT=${API_ROOT:-"/pulp/"}
 
 show_logs() {
   oc get pods -o wide
+  oc get routes -o wide
   echo "======================== Operator ========================"
   oc logs -l app.kubernetes.io/name=pulp-operator -c pulp-manager --tail=10000
   echo "======================== API ========================"

@@ -205,7 +205,7 @@ jobs:
         run: sudo -E CI_TEST=galaxy ./up.sh
         shell: bash
       - name: Check and wait pulp-operator deploy
-        run: sudo -E time kubectl wait --for condition=Pulp-Operator-Finished-Execution pulp/example-pulp --timeout=-1s
+        run: sudo -E time kubectl wait --for condition=Pulp-Operator-Finished-Execution pulp/example-pulp --timeout=600s
         shell: bash
       - name: Popeye
         run: |

@@ -2,7 +2,7 @@ name: Pulp CI
 on:
   push:
     branches:
-      - go-1.0.0-beta
+      - '*'
     tags:
       - '*'
   workflow_dispatch:

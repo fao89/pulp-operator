@@ -27,6 +27,8 @@ import (
 	"go.uber.org/zap/zapcore"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	"github.com/fatih/color"
+	"github.com/go-logr/logr"
 	configv1 "github.com/openshift/api/config/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -52,6 +54,11 @@ var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
 )
+
+func getLogger(bla logr.Logger) logr.Logger {
+	color.NoColor = false
+	return bla
+}
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
@@ -84,9 +91,10 @@ func main() {
 	if err != nil {
 		DevMode = false
 	}
+	fao := getLogger(zap.New(zap.UseDevMode(DevMode), zap.WriteTo(os.Stdout), zap.Encoder(logfmtEncoder)))
 
 	// Construct a new logr.logger.
-	ctrl.SetLogger(zap.New(zap.UseDevMode(DevMode), zap.WriteTo(os.Stdout), zap.Encoder(logfmtEncoder)))
+	ctrl.SetLogger(fao)
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,

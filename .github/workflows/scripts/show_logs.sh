@@ -32,7 +32,7 @@ kubectl get pulp,pvc,configmap,serviceaccount,secret,networkpolicy,ingress,servi
 echo ::endgroup::
 
 echo ::group::OPERATOR_LOGS
-journalctl --unit=pulp-operator -n 10000 --no-pager
+journalctl --unit=pulp-operator -n 10000 --no-pager --output=cat
 kubectl logs -l app.kubernetes.io/component=operator -c manager --tail=10000
 echo ::endgroup::
 

@@ -7,7 +7,8 @@ SERVER=$(hostname)
 WEB_PORT="24817"
 if [[ "${1-}" == "--minikube" ]] || [[ "${1-}" == "-m" ]]; then
   KUBE="minikube"
-  SERVER="localhost"
+  SERVER="pulp.com"
+  echo 127.0.0.1   pulp.com | sudo tee -a /etc/hosts
   if [[ "$CI_TEST" == "true" ]]; then
     SVC_NAME="example-pulp-web-svc"
     WEB_PORT="24880"
@@ -45,20 +46,15 @@ echo 127.0.0.1   example-pulp-web-svc.pulp-operator-system.svc.cluster.local | s
 
 pulp status | jq
 
-pushd pulp_ansible/docs/_scripts
-timeout 5m bash -x quickstart.sh || {
-  YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_ansible.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
-  git fetch --depth=1 origin heads/$YLATEST:$YLATEST
-  git checkout $YLATEST
-  timeout 5m bash -x quickstart.sh
-}
-popd
+# pushd pulp_ansible/docs/_scripts
+# timeout 5m bash -x quickstart.sh || {
+#   YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_ansible.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
+#   git fetch --depth=1 origin heads/$YLATEST:$YLATEST
+#   git checkout $YLATEST
+#   timeout 5m bash -x quickstart.sh
+# }
+# popd
 
 pushd pulp_container/docs/_scripts
-timeout 5m bash -x docs_check.sh || {
-  YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_container.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
-  git fetch --depth=1 origin heads/$YLATEST:$YLATEST
-  git checkout $YLATEST
-  timeout 5m bash -x docs_check.sh
-}
+bash -x docs_check.sh
 popd

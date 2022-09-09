@@ -1,4 +1,3 @@
-#!/bin/bash -e
 #!/usr/bin/env bash
 
 if [[ "$CI_TEST" == "galaxy" ]]; then

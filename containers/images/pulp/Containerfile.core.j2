@@ -70,6 +70,7 @@ RUN pip install  \
 	"requests[use_chardet_on_py3]"
 
 RUN mkdir -p /etc/pulp \
+			 /var/lib/operator/static \
 			 /var/lib/pulp/media \
 			 /var/lib/pulp/assets \
 			 /var/lib/pulp/tmp
@@ -101,6 +102,8 @@ RUN pip install {{ plugin }}
 {% endif %}
 {% endfor %}
 {% endif %}
+
+RUN PULP_STATIC_ROOT=/var/lib/operator/static/ PULP_CONTENT_ORIGIN=localhost /usr/local/bin/pulpcore-manager collectstatic --clear --noinput --link
 
 COPY pulp-operator/containers/images/pulp/container-assets/readyz.py /usr/bin/readyz.py
 COPY pulp-operator/containers/images/pulp/container-assets/route_paths.py /usr/bin/route_paths.py

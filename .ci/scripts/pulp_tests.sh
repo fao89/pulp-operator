@@ -44,20 +44,17 @@ cat ~/.config/pulp/cli.toml | tee ~/.config/pulp/settings.toml
 
 pulp status | jq
 
-pushd pulp_ansible/docs/_scripts
-timeout 5m bash -x quickstart.sh || {
-  YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_ansible.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
-  git fetch --depth=1 origin heads/$YLATEST:$YLATEST
-  git checkout $YLATEST
-  timeout 5m bash -x quickstart.sh
-}
-popd
-
-# pushd pulp_container/docs/_scripts
-# timeout 5m bash -x docs_check.sh || {
-#   YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_container.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
+# pushd pulp_ansible/docs/_scripts
+# timeout 5m bash -x quickstart.sh || {
+#   YLATEST=$(git ls-remote --heads https://github.com/pulp/pulp_ansible.git | grep -o "[[:digit:]]\.[[:digit:]]*" | sort -V | tail -1)
 #   git fetch --depth=1 origin heads/$YLATEST:$YLATEST
 #   git checkout $YLATEST
-#   timeout 5m bash -x docs_check.sh
+#   timeout 5m bash -x quickstart.sh
 # }
 # popd
+
+pushd pulp_container/docs/_scripts
+git fetch --depth=1 origin heads/bla:bla
+git checkout bla
+timeout 5m bash -x docs_check.sh
+popd

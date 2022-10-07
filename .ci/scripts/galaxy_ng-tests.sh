@@ -5,13 +5,10 @@ KUBE="k3s"
 SERVER=$(hostname)
 WEB_PORT="24817"
 if [[ "$1" == "--minikube" ]] || [[ "$1" == "-m" ]]; then
+  echo $(minikube ip)   ingress.local | sudo tee -a /etc/hosts
   KUBE="minikube"
-  SERVER="localhost"
-  if [[ "$CI_TEST" == "true" ]]; then
-    SVC_NAME="galaxy-example-web-svc"
-    WEB_PORT="24880"
-    kubectl port-forward service/$SVC_NAME $WEB_PORT:$WEB_PORT &
-  fi
+  SERVER="ingress.local"
+  WEB_PORT="80"
 fi
 
 pip install ansible
@@ -52,12 +49,12 @@ do
 done
 
 podman pull quay.io/pulp/pulp-operator:devel
-podman login --tls-verify=false -u admin -p password localhost:24880
-podman tag quay.io/pulp/pulp-operator:devel localhost:24880/pulp/pulp-operator:devel
-podman push --tls-verify=false localhost:24880/pulp/pulp-operator:devel
+podman login --tls-verify=false -u admin -p password ingress.local:80
+podman tag quay.io/pulp/pulp-operator:devel ingress.local:80/pulp/pulp-operator:devel
+podman push --tls-verify=false ingress.local:80/pulp/pulp-operator:devel
 
 
-curl -H "Authorization:Token $TOKEN" http://localhost:24880/api/galaxy/_ui/v1/execution-environments/repositories/ | jq
+curl -H "Authorization:Token $TOKEN" http://ingress.local:80/api/galaxy/_ui/v1/execution-environments/repositories/ | jq
 
 cat >> ansible.cfg << ANSIBLECFG
 [defaults]
@@ -113,8 +110,6 @@ curl -X PUT -d '{"requirements_file": "collections: \n - pulp.squeezer", "url": 
 TASK_PK=$(curl -X POST -H "Authorization:Token $TOKEN" $BASE_ADDR/api/galaxy/content/community/v3/sync/ | jq -r '.task')
 echo "$BASE_ADDR/api/galaxy/pulp/api/v3/tasks/$TASK_PK/"
 wait_until_task_finished "$BASE_ADDR/api/galaxy/pulp/api/v3/tasks/$TASK_PK/"
-
-echo 127.0.0.1   galaxy-example-web-svc.pulp-operator-system.svc.cluster.local | sudo tee -a /etc/hosts
 
 echo "Install pulp.squeezer collection"
 mkdir -p /tmp/ci_test

@@ -57,15 +57,8 @@ SERVER=$(hostname)
 WEB_PORT="24817"
 if [[ "$1" == "--minikube" ]] || [[ "$1" == "-m" ]]; then
   KUBE="minikube"
-  SERVER="localhost"
-  if [[ "$CI_TEST" == "true" ]] || [[ "$CI_TEST" == "galaxy" ]]; then
-    services=$(kubectl get services)
-    WEB_PORT=$( echo "$services" | awk -F '[ :/]+' '/web-svc/{print $5}')
-    SVC_NAME=$( echo "$services" | awk -F '[ :/]+' '/web-svc/{print $1}')
-    sudo pkill -f "port-forward" || true
-    echo "port-forwarding service/$SVC_NAME $WEB_PORT:$WEB_PORT"
-    kubectl port-forward service/$SVC_NAME $WEB_PORT:$WEB_PORT &
-  fi
+  SERVER="ingress.local"
+  WEB_PORT="80"
 fi
 
 # From the pulp-server/pulp-api config-map

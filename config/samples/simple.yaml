@@ -5,7 +5,7 @@ metadata:
 spec:
   deployment_type: pulp
   image_version: latest
-  image_web_version: latest
+  ingress_host: http://ingress.local
 #  affinity:
 #    nodeAffinity:
 #      requiredDuringSchedulingIgnoredDuringExecution:
@@ -20,8 +20,6 @@ spec:
   content:
     replicas: 1
   worker:
-    replicas: 1
-  web:
     replicas: 1
 
   database:

@@ -5,14 +5,11 @@ metadata:
 spec:
   deployment_type: pulp
   image_version: latest
-  image_web_version: latest
   api:
     replicas: 1
   content:
     replicas: 1
   worker:
-    replicas: 1
-  web:
     replicas: 1
 
   database:

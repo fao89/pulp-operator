@@ -57,4 +57,4 @@ if [[ "$KUBE" == "minikube" ]]; then
 fi
 
 echo "Status endpoint"
-http --follow --timeout 30 --check-status --pretty format --print hb http://localhost:24880/pulp/api/v3/status/ || true
+http --follow --timeout 30 --check-status --pretty format --print hb http://ingress.local/pulp/api/v3/status/ || true

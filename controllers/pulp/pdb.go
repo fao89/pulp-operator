@@ -31,14 +31,13 @@ import (
 	policy "k8s.io/api/policy/v1"
 )
 
-// pdbController creates and reconciles {api,content,worker,web} pdbs
+// pdbController creates and reconciles {api,content,worker} pdbs
 func (r *PulpReconciler) pdbController(ctx context.Context, pulp *repomanagerv1alpha1.Pulp, log logr.Logger) (ctrl.Result, error) {
 
 	pdbList := map[string]*policy.PodDisruptionBudgetSpec{
-		"api":       pulp.Spec.Api.PDB,
-		"content":   pulp.Spec.Content.PDB,
-		"worker":    pulp.Spec.Worker.PDB,
-		"webserver": pulp.Spec.Web.PDB,
+		"api":     pulp.Spec.Api.PDB,
+		"content": pulp.Spec.Content.PDB,
+		"worker":  pulp.Spec.Worker.PDB,
 	}
 
 	for component, pdb := range pdbList {

@@ -5,7 +5,6 @@ metadata:
 spec:
   deployment_type: pulp
   image: quay.io/pulp/galaxy
-  image_web: quay.io/pulp/galaxy-web
   admin_password_secret: "example-pulp-admin-password"
   signing_secret: "signing-galaxy"
   signing_scripts_configmap: "signing-scripts"
@@ -40,15 +39,6 @@ spec:
     resource_requirements:
       requests:
         cpu: 150m
-        memory: 256Mi
-      limits:
-        cpu: 800m
-        memory: 1Gi
-  web:
-    replicas: 1
-    resource_requirements:
-      requests:
-        cpu: 100m
         memory: 256Mi
       limits:
         cpu: 800m

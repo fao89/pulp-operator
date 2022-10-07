@@ -15,7 +15,7 @@ import (
 )
 
 type PodReplicas struct {
-	Api, Content, Worker, Web int32
+	Api, Content, Worker int32
 }
 
 // restorePulpCR recreates the pulp CR with the content from backup
@@ -54,13 +54,11 @@ func (r *PulpRestoreReconciler) restorePulpCR(ctx context.Context, pulpRestore *
 			Api:     pulp.Spec.Api.Replicas,
 			Content: pulp.Spec.Content.Replicas,
 			Worker:  pulp.Spec.Worker.Replicas,
-			Web:     pulp.Spec.Web.Replicas,
 		}
 
 		pulp.Spec.Api.Replicas = 0
 		pulp.Spec.Content.Replicas = 0
 		pulp.Spec.Worker.Replicas = 0
-		pulp.Spec.Web.Replicas = 0
 		if err = r.Create(ctx, &pulp); err != nil {
 			log.Error(err, "Error trying to restore "+pulpRestore.Spec.DeploymentName+" CR!")
 			r.updateStatus(ctx, pulpRestore, metav1.ConditionFalse, "RestoreComplete", "Failed to restore cr_object!", "FailedRestore"+pulpRestore.Spec.DeploymentName+"CR")
@@ -90,14 +88,10 @@ func (r *PulpRestoreReconciler) scaleDeployments(ctx context.Context, pulpRestor
 		pulp.Spec.Api.Replicas = podReplicas.Api
 		pulp.Spec.Content.Replicas = podReplicas.Content
 		pulp.Spec.Worker.Replicas = podReplicas.Worker
-		pulp.Spec.Web.Replicas = podReplicas.Web
 	} else {
 		pulp.Spec.Api.Replicas = 1
 		pulp.Spec.Content.Replicas = 1
 		pulp.Spec.Worker.Replicas = 1
-		if pulp.Spec.IngressType != "route" && pulp.Spec.IngressType != "Route" {
-			pulp.Spec.Web.Replicas = 1
-		}
 	}
 
 	if err := r.Update(ctx, pulp); err != nil {
@@ -112,7 +106,7 @@ func (r *PulpRestoreReconciler) scaleDeployments(ctx context.Context, pulpRestor
 
 		// [TODO] we should use the operator status to make sure that it finished its execution, but the
 		// .status.condition is not reflecting the real state.
-		// pulp-api and pulp-web were not READY and Pulp-Operator-Finished-Execution was set to true
+		// pulp-api was not READY and Pulp-Operator-Finished-Execution was set to true
 		/* r.Get(ctx, types.NamespacedName{Name: pulpRestore.Spec.DeploymentName, Namespace: pulpRestore.Namespace}, pulp)
 		if v1.IsStatusConditionPresentAndEqual(pulp.Status.Conditions, cases.Title(language.English, cases.Compact).String(pulp.Spec.DeploymentType)+"-Operator-Finished-Execution", metav1.ConditionTrue) {
 			break
@@ -123,19 +117,6 @@ func (r *PulpRestoreReconciler) scaleDeployments(ctx context.Context, pulpRestor
 		if apiDeployment.Status.ReadyReplicas == apiDeployment.Status.Replicas {
 			break
 		}
-	}
-
-	// There is a small interval in which pulp-web stays in a READY state and crash after a few seconds because pulp-api
-	// didn't finish it boot process. This sleep is a workaround to try to mitigate this.
-	// [TODO] add readiness probe to pulp-web pods
-	time.Sleep(time.Second * 60)
-	for timeout := 0; timeout < 18; timeout++ {
-		webDeployment := &appsv1.Deployment{}
-		r.Get(ctx, types.NamespacedName{Name: pulp.Name + "-web", Namespace: pulp.Namespace}, webDeployment)
-		if webDeployment.Status.ReadyReplicas == webDeployment.Status.Replicas {
-			break
-		}
-		time.Sleep(time.Second * 10)
 	}
 
 	return nil

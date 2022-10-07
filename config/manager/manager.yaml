@@ -50,8 +50,6 @@ spec:
         env:
           - name: RELATED_IMAGE_PULP
             value: quay.io/pulp/pulp:stable
-          - name: RELATED_IMAGE_PULP_WEB
-            value: quay.io/pulp/pulp-web:stable
           - name: RELATED_IMAGE_PULP_REDIS
             value: redis:latest
           - name: RELATED_IMAGE_PULP_POSTGRES

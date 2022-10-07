@@ -81,7 +81,7 @@ metadata:
             "file_storage_size": "2Gi",
             "file_storage_storage_class": "standard",
             "image_version": "latest",
-            "image_web_version": "latest",
+            "ingress_host": "http://ingress.local",
             "ingress_type": "nodeport",
             "pulp_settings": {
               "allowed_export_paths": [
@@ -92,9 +92,6 @@ metadata:
               ],
               "api_root": "/pulp/",
               "telemetry": false
-            },
-            "web": {
-              "replicas": 1
             },
             "worker": {
               "replicas": 1
@@ -134,8 +131,7 @@ metadata:
             "file_storage_storage_class": "standard",
             "image": "quay.io/pulp/galaxy",
             "image_version": "latest",
-            "image_web": "quay.io/pulp/galaxy-web",
-            "image_web_version": "latest",
+            "ingress_host": "http://ingress.local",
             "ingress_type": "nodeport",
             "pulp_settings": {
               "allowed_export_paths": [
@@ -150,19 +146,6 @@ metadata:
             "signing_scripts_configmap": "signing-scripts",
             "signing_secret": "signing-galaxy",
             "storage_type": "File",
-            "web": {
-              "replicas": 1,
-              "resource_requirements": {
-                "limits": {
-                  "cpu": "800m",
-                  "memory": "1Gi"
-                },
-                "requests": {
-                  "cpu": "100m",
-                  "memory": "256Mi"
-                }
-              }
-            },
             "worker": {
               "replicas": 1,
               "resource_requirements": {
@@ -743,16 +726,12 @@ spec:
         path: image_version
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
-      - description: The image name (repo name) for the pulp webserver image.
-        displayName: Image Web
-        path: image_web
+      - description: Ingress DNS host
+        displayName: Ingress Host
+        path: ingress_host
         x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:hidden
-      - description: The image version for the pulp webserver image.
-        displayName: Image Web Version
-        path: image_web_version
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:hidden
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:ingress_type:Ingress
       - description: The ingress type to use to reach the deployed instance
         displayName: Ingress Type
         path: ingress_type
@@ -834,46 +813,6 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:select:File
         - urn:alm:descriptor:com.tectonic.ui:select:S3
         - urn:alm:descriptor:com.tectonic.ui:select:Azure
-      - displayName: Web
-        path: web
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:hidden
-      - description: Periodic probe of container liveness. Container will be restarted
-          if the probe fails.
-        displayName: Liveness Probe
-        path: web.livenessProbe
-        x-descriptors:
-        - urn:alm:descriptor:io.kubernetes:Probe
-        - urn:alm:descriptor:com.tectonic.ui:advanced
-      - description: NodeSelector for the Web pods.
-        displayName: Node Selector
-        path: web.node_selector
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:advanced
-      - description: PodDisruptionBudget is an object to define the max disruption
-          that can be caused to a collection of pods
-        displayName: PDB
-        path: web.pdb
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:hidden
-      - description: Periodic probe of container service readiness. Container will
-          be removed from service endpoints if the probe fails.
-        displayName: Readiness Probe
-        path: web.readinessProbe
-        x-descriptors:
-        - urn:alm:descriptor:io.kubernetes:Probe
-        - urn:alm:descriptor:com.tectonic.ui:advanced
-      - description: Size is the size of number of pulp-web replicas
-        displayName: Replicas
-        path: web.replicas
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:podCount
-      - description: Resource requirements for the pulp-web container
-        displayName: Resource Requirements
-        path: web.resource_requirements
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:resourceRequirements
-        - urn:alm:descriptor:com.tectonic.ui:advanced
       - displayName: Worker
         path: worker
       - description: Defines various deployment affinities.
@@ -1080,8 +1019,6 @@ spec:
                 env:
                 - name: RELATED_IMAGE_PULP
                   value: quay.io/pulp/pulp:stable
-                - name: RELATED_IMAGE_PULP_WEB
-                  value: quay.io/pulp/pulp-web:stable
                 - name: RELATED_IMAGE_PULP_REDIS
                   value: redis:latest
                 - name: RELATED_IMAGE_PULP_POSTGRES
@@ -1090,7 +1027,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.annotations['olm.targetNamespaces']
-                image: quay.io/rhn_support_hyagi/pulp-operator:v1.0.0-alpha
+                image: quay.io/pulp/pulp-operator:v1.0.0-alpha
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -1384,8 +1321,6 @@ spec:
   relatedImages:
   - image: quay.io/pulp/pulp:stable
     name: pulp
-  - image: quay.io/pulp/pulp-web:stable
-    name: pulp-web
   - image: redis:latest
     name: pulp-redis
   - image: postgres:13

@@ -98,6 +98,11 @@ type PulpSpec struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:select:Route","urn:alm:descriptor:com.tectonic.ui:select:Ingress","urn:alm:descriptor:com.tectonic.ui:select:LoadBalancer","urn:alm:descriptor:com.tectonic.ui:select:NodePort"}
 	IngressType string `json:"ingress_type,omitempty"`
 
+	// Ingress DNS host
+	// +kubebuilder:validation:Optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:text","urn:alm:descriptor:com.tectonic.ui:fieldDependency:ingress_type:Ingress"}
+	IngressHost string `json:"ingress_host,omitempty"`
+
 	// Route DNS host
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:text","urn:alm:descriptor:com.tectonic.ui:fieldDependency:ingress_type:Route"}
@@ -168,10 +173,6 @@ type PulpSpec struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	Worker Worker `json:"worker,omitempty"`
 
-	//+kubebuilder:validation:Optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
-	Web Web `json:"web,omitempty"`
-
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
 	Cache Cache `json:"cache,omitempty"`
@@ -181,18 +182,6 @@ type PulpSpec struct {
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
 	PulpSettings runtime.RawExtension `json:"pulp_settings,omitempty"`
-
-	// The image name (repo name) for the pulp webserver image.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:="quay.io/pulp/pulp-web"
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
-	ImageWeb string `json:"image_web,omitempty"`
-
-	// The image version for the pulp webserver image.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:="stable"
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
-	ImageWebVersion string `json:"image_web_version,omitempty"`
 
 	// Secret where the administrator password can be found
 	// +kubebuilder:validation:Optional
@@ -413,42 +402,6 @@ type Worker struct {
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:updateStrategy","urn:alm:descriptor:com.tectonic.ui:advanced"}
 	Strategy appsv1.DeploymentStrategy `json:"strategy,omitempty"`
-}
-
-type Web struct {
-	// Size is the size of number of pulp-web replicas
-	// +kubebuilder:default:=1
-	// +kubebuilder:validation:Minimum:=0
-	// +kubebuilder:validation:Optional
-	// +nullable
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:podCount"}
-	Replicas int32 `json:"replicas"`
-
-	// Resource requirements for the pulp-web container
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:resourceRequirements","urn:alm:descriptor:com.tectonic.ui:advanced"}
-	ResourceRequirements corev1.ResourceRequirements `json:"resource_requirements,omitempty"`
-
-	// Periodic probe of container service readiness.
-	// Container will be removed from service endpoints if the probe fails.
-	// +kubebuilder:validation:Optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:io.kubernetes:Probe","urn:alm:descriptor:com.tectonic.ui:advanced"}
-	ReadinessProbe *corev1.Probe `json:"readinessProbe,omitempty"`
-
-	// Periodic probe of container liveness.
-	// Container will be restarted if the probe fails.
-	// +kubebuilder:validation:Optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:io.kubernetes:Probe","urn:alm:descriptor:com.tectonic.ui:advanced"}
-	LivenessProbe *corev1.Probe `json:"livenessProbe,omitempty"`
-
-	// NodeSelector for the Web pods.
-	// +kubebuilder:validation:Optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
-	NodeSelector map[string]string `json:"node_selector,omitempty"`
-
-	// PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
-	// +optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
-	PDB *policy.PodDisruptionBudgetSpec `json:"pdb,omitempty"`
 }
 
 type ExternalDB struct {

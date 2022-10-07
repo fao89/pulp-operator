@@ -124,12 +124,6 @@ func (r *PulpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		})
 	}
 
-	if strings.ToLower(pulp.Spec.IngressType) != "route" && pulp.Spec.ImageVersion != pulp.Spec.ImageWebVersion {
-		err := fmt.Errorf("image version and image web version should be equal ")
-		log.Error(err, "ImageVersion should be equal to ImageWebVersion")
-		return ctrl.Result{}, err
-	}
-
 	// Checking if there is more than one storage type defined.
 	// Only a single type should be provided, if more the operator will not be able to
 	// determine which one should be used.
@@ -234,8 +228,8 @@ func (r *PulpReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 			return pulpController, nil
 		}
 	} else {
-		log.V(1).Info("Running web tasks")
-		pulpController, err = r.pulpWebController(ctx, pulp, log)
+		log.V(1).Info("Running ingress tasks")
+		pulpController, err = r.pulpIngressController(ctx, pulp, log)
 		if err != nil {
 			return pulpController, err
 		} else if pulpController.Requeue {

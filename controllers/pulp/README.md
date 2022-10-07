@@ -14,7 +14,6 @@
 * [PulpList](#pulplist)
 * [PulpSpec](#pulpspec)
 * [PulpStatus](#pulpstatus)
-* [Web](#web)
 * [Worker](#worker)
 
 #### Affinity
@@ -175,6 +174,7 @@ PulpSpec defines the desired state of Pulp
 | signing_scripts_configmap | ConfigMap where the signing scripts are stored. | string | false |
 | storage_type | Configuration for the storage type utilized in the backup | string | false |
 | ingress_type | The ingress type to use to reach the deployed instance | string | false |
+| ingress_host | Ingress DNS host | string | false |
 | route_host | Route DNS host | string | false |
 | route_labels | RouteLabels will append custom label(s) into routes (used by router shard routeSelector). | map[string]string | false |
 | nodeport_port | Provide requested port value | int32 | false |
@@ -189,11 +189,8 @@ PulpSpec defines the desired state of Pulp
 | database |  | [Database](#database) | false |
 | content |  | [Content](#content) | false |
 | worker |  | [Worker](#worker) | false |
-| web |  | [Web](#web) | false |
 | cache |  | [Cache](#cache) | false |
 | pulp_settings | The pulp settings. | runtime.RawExtension | false |
-| image_web | The image name (repo name) for the pulp webserver image. | string | false |
-| image_web_version | The image version for the pulp webserver image. | string | false |
 | admin_password_secret | Secret where the administrator password can be found | string | false |
 | image_pull_secrets | Image pull secrets for container images | []string | false |
 | sso_secret | Secret where Single Sign-on configuration can be found | string | false |
@@ -208,21 +205,6 @@ PulpStatus defines the observed state of Pulp
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
 | conditions |  | []metav1.Condition | true |
-
-[Back to Custom Resources](#custom-resources)
-
-#### Web
-
-
-
-| Field | Description | Scheme | Required |
-| ----- | ----------- | ------ | -------- |
-| replicas | Size is the size of number of pulp-web replicas | int32 | true |
-| resource_requirements | Resource requirements for the pulp-web container | corev1.ResourceRequirements | false |
-| readinessProbe | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. | *corev1.Probe | false |
-| livenessProbe | Periodic probe of container liveness. Container will be restarted if the probe fails. | *corev1.Probe | false |
-| node_selector | NodeSelector for the Web pods. | map[string]string | false |
-| pdb | PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods | *policy.PodDisruptionBudgetSpec | false |
 
 [Back to Custom Resources](#custom-resources)
 

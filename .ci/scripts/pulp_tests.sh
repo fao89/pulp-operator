@@ -5,14 +5,11 @@ set -euo pipefail
 KUBE="k3s"
 SERVER=$(hostname)
 WEB_PORT="24817"
-if [[ "${1-}" == "--minikube" ]] || [[ "${1-}" == "-m" ]]; then
+if [[ "$1" == "--minikube" ]] || [[ "$1" == "-m" ]]; then
+  echo $(minikube ip)   ingress.local | sudo tee -a /etc/hosts
   KUBE="minikube"
-  SERVER="localhost"
-  if [[ "$CI_TEST" == "true" ]]; then
-    SVC_NAME="example-pulp-web-svc"
-    WEB_PORT="24880"
-    kubectl port-forward service/$SVC_NAME $WEB_PORT:$WEB_PORT &
-  fi
+  SERVER="ingress.local"
+  WEB_PORT="80"
 fi
 
 # From the pulp-server/pulp-api config-map
@@ -41,7 +38,6 @@ EOF
 fi
 
 cat ~/.config/pulp/cli.toml | tee ~/.config/pulp/settings.toml
-echo 127.0.0.1   example-pulp-web-svc.pulp-operator-system.svc.cluster.local | sudo tee -a /etc/hosts
 
 pulp status | jq
 

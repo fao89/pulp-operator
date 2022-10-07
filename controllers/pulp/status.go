@@ -18,7 +18,6 @@ package pulp
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	"golang.org/x/text/cases"
@@ -79,25 +78,6 @@ func (r *PulpReconciler) pulpStatus(ctx context.Context, pulp *repomanagerv1alph
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	// check web pods are READY
-	if strings.ToLower(pulp.Spec.IngressType) != "route" {
-		webConditionType := cases.Title(language.English, cases.Compact).String(pulp.Spec.DeploymentType) + "-Web-Ready"
-		webDeployment := &appsv1.Deployment{}
-		if err := r.Get(ctx, types.NamespacedName{Name: pulp.Name + "-web", Namespace: pulp.Namespace}, webDeployment); err == nil {
-			if !isDeploymentReady(webDeployment) {
-				log.Info(pulp.Spec.DeploymentType + " web not ready yet ...")
-				r.updateStatus(ctx, pulp, metav1.ConditionFalse, webConditionType, "UpdatingWebDeployment", "Web deployment not ready yet")
-				return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
-			} else if v1.IsStatusConditionFalse(pulp.Status.Conditions, webConditionType) {
-				r.updateStatus(ctx, pulp, metav1.ConditionTrue, webConditionType, "WebTasksFinished", "All Web tasks ran successfully")
-				r.recorder.Event(pulp, corev1.EventTypeNormal, "WebReady", "All Web tasks ran successfully")
-			}
-		} else {
-			log.Error(err, "Failed to get Pulp Web Deployment")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-		}
-	}
-
 	// if we get into here it means that all components are READY, so operator finished its execution
 	if v1.IsStatusConditionFalse(pulp.Status.Conditions, cases.Title(language.English, cases.Compact).String(pulp.Spec.DeploymentType)+"-Operator-Finished-Execution") {
 		v1.SetStatusCondition(&pulp.Status.Conditions, metav1.Condition{
@@ -116,8 +96,5 @@ func (r *PulpReconciler) pulpStatus(ctx context.Context, pulp *repomanagerv1alph
 // isDeploymentReady returns true if there is no unavailable Replicas for the deployment
 func isDeploymentReady(deployment *appsv1.Deployment) bool {
 
-	if deployment.Status.UnavailableReplicas > 0 {
-		return false
-	}
-	return true
+	return deployment.Status.UnavailableReplicas <= 0
 }

@@ -12,7 +12,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/format"
-	"k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -698,8 +697,8 @@ var _ = Describe("Pulp controller", Ordered, func() {
 					Enabled:           true,
 					RedisStorageClass: "standard",
 				},
-				ImageVersion:    "latest",
-				ImageWebVersion: "latest",
+				ImageVersion: "latest",
+				IngressHost:  "http://ingress.local",
 				Api: repomanagerv1alpha1.Api{
 					Replicas: 1,
 				},
@@ -707,9 +706,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 					Replicas: 1,
 				},
 				Worker: repomanagerv1alpha1.Worker{
-					Replicas: 1,
-				},
-				Web: repomanagerv1alpha1.Web{
 					Replicas: 1,
 				},
 				Database: repomanagerv1alpha1.Database{
@@ -902,7 +898,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			waitPulpOperatorFinish(ctx, createdPulp)
 			createdPulp.Spec.Image = "quay.io/pulp/pulp2"
 			createdPulp.Spec.ImageVersion = "stable"
-			createdPulp.Spec.ImageWebVersion = "stable"
 			objectUpdate(ctx, createdPulp)
 
 			waitPulpOperatorFinish(ctx, createdPulp)
@@ -918,7 +913,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			// rollback the config to not impact other tests
 			createdPulp.Spec.Image = "quay.io/pulp/pulp"
 			createdPulp.Spec.ImageVersion = "latest"
-			createdPulp.Spec.ImageWebVersion = "latest"
 			objectUpdate(ctx, createdPulp)
 
 		})
@@ -970,7 +964,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			waitPulpOperatorFinish(ctx, createdPulp)
 			createdPulp.Spec.Image = "quay.io/pulp/pulp2"
 			createdPulp.Spec.ImageVersion = "stable"
-			createdPulp.Spec.ImageWebVersion = "stable"
 			// before trying to update an object we are doing another get to try to workaround
 			// the issue: "the object has been modified; please apply your changes to the latest version and try again"
 			objectUpdate(ctx, createdPulp)
@@ -987,7 +980,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			waitPulpOperatorFinish(ctx, createdPulp)
 			createdPulp.Spec.Image = "quay.io/pulp/pulp"
 			createdPulp.Spec.ImageVersion = "latest"
-			createdPulp.Spec.ImageWebVersion = "latest"
 			objectUpdate(ctx, createdPulp)
 		})
 	})
@@ -1035,7 +1027,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 
 			createdPulp.Spec.Image = "quay.io/pulp/pulp2"
 			createdPulp.Spec.ImageVersion = "stable"
-			createdPulp.Spec.ImageWebVersion = "stable"
 			objectUpdate(ctx, createdPulp)
 			waitPulpOperatorFinish(ctx, createdPulp)
 
@@ -1049,7 +1040,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			waitPulpOperatorFinish(ctx, createdPulp)
 			createdPulp.Spec.Image = "quay.io/pulp/pulp"
 			createdPulp.Spec.ImageVersion = "latest"
-			createdPulp.Spec.ImageWebVersion = "latest"
 			objectUpdate(ctx, createdPulp)
 		})
 	})
@@ -1139,18 +1129,6 @@ var _ = Describe("Pulp controller", Ordered, func() {
 			Expect(route.Spec.Path).Should(Equal(expectedRoutes[routeName].(struct{ Path, TargetPort, ServiceName string }).Path))
 			Expect(route.Spec.Port.TargetPort).Should(Equal(expectedRoutes[routeName].(struct{ Path, TargetPort, ServiceName string }).TargetPort))
 			Expect(route.Spec.To.Name).Should(Equal(expectedRoutes[routeName].(struct{ Path, TargetPort, ServiceName string }).ServiceName))
-
-			By("Making sure no deployment/pulp-web is provisioned")
-			webDeployment := &appsv1.Deployment{}
-			err := k8sClient.Get(ctx, types.NamespacedName{Name: PulpName + "-web", Namespace: PulpNamespace}, webDeployment)
-			Expect(err).ShouldNot(BeEmpty())
-			Expect(errors.IsNotFound(err)).Should(BeTrue())
-
-			By("Making sure no svc/pulp-web is provisioned")
-			webSvc := &corev1.Service{}
-			err = k8sClient.Get(ctx, types.NamespacedName{Name: PulpName + "-web-svc", Namespace: PulpNamespace}, webSvc)
-			Expect(err).ShouldNot(BeEmpty())
-			Expect(errors.IsNotFound(err)).Should(BeTrue())
 
 		})
 	})

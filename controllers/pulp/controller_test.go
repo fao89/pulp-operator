@@ -698,7 +698,7 @@ var _ = Describe("Pulp controller", Ordered, func() {
 					RedisStorageClass: "standard",
 				},
 				ImageVersion: "latest",
-				IngressHost:  "http://ingress.local",
+				IngressHost:  "ingress.local",
 				Api: repomanagerv1alpha1.Api{
 					Replicas: 1,
 				},

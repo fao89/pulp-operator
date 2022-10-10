@@ -19,6 +19,7 @@ package pulp
 import (
 	"context"
 	"encoding/json"
+	"strings"
 	"time"
 
 	"golang.org/x/text/cases"
@@ -146,7 +147,7 @@ func pulpIngressObject(m *repomanagerv1alpha1.Pulp, plugins []IngressPlugin) *ne
 	annotation := map[string]string{
 		"haproxy.router.openshift.io/timeout":               m.Spec.HAProxyTimeout,
 		"nginx.ingress.kubernetes.io/proxy-body-size":       "0",
-		"nginx.org/client-max-body-size":                    "0",
+		"nginx.org/client-max-body-size":                    "10m",
 		"nginx.ingress.kubernetes.io/proxy-read-timeout":    "120s",
 		"nginx.ingress.kubernetes.io/proxy-connect-timeout": "120s",
 		"nginx.ingress.kubernetes.io/proxy-send-timeout":    "120s",
@@ -155,9 +156,15 @@ func pulpIngressObject(m *repomanagerv1alpha1.Pulp, plugins []IngressPlugin) *ne
 	var paths []netv1.HTTPIngressPath
 	var path netv1.HTTPIngressPath
 	pathType := netv1.PathTypePrefix
+	rewrite := ""
 	for _, plugin := range plugins {
 		if len(plugin.Rewrite) > 0 {
-			annotation["nginx.ingress.kubernetes.io/configuration-snippet"] = "rewrite /ui* /static/galaxy_ng/index.html break;"
+			rewrite = "rewrite ^" + strings.TrimRight(plugin.Path, "/") + "* " + plugin.Rewrite + ";"
+			if strings.Contains(annotation["nginx.ingress.kubernetes.io/configuration-snippet"], rewrite) {
+				continue
+			}
+			annotation["nginx.ingress.kubernetes.io/configuration-snippet"] = rewrite
+			continue
 		}
 		path = netv1.HTTPIngressPath{
 			Path:     plugin.Path,
@@ -183,6 +190,7 @@ func pulpIngressObject(m *repomanagerv1alpha1.Pulp, plugins []IngressPlugin) *ne
 		Spec: netv1.IngressSpec{
 			Rules: []netv1.IngressRule{
 				{
+					Host: m.Spec.IngressHost,
 					IngressRuleValue: netv1.IngressRuleValue{
 						HTTP: &netv1.HTTPIngressRuleValue{
 							Paths: paths,

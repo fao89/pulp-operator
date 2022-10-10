@@ -6,7 +6,7 @@ spec:
   deployment_type: galaxy
   image: quay.io/pulp/galaxy
   image_version: latest
-  ingress_host: http://ingress.local
+  ingress_host: ingress.local
   admin_password_secret: "example-pulp-admin-password"
   signing_secret: "signing-galaxy"
   signing_scripts_configmap: "signing-scripts"

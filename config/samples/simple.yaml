@@ -5,7 +5,7 @@ metadata:
 spec:
   deployment_type: pulp
   image_version: latest
-  ingress_host: http://ingress.local
+  ingress_host: ingress.local
 #  affinity:
 #    nodeAffinity:
 #      requiredDuringSchedulingIgnoredDuringExecution:

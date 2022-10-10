@@ -81,7 +81,7 @@ metadata:
             "file_storage_size": "2Gi",
             "file_storage_storage_class": "standard",
             "image_version": "latest",
-            "ingress_host": "http://ingress.local",
+            "ingress_host": "ingress.local",
             "ingress_type": "nodeport",
             "pulp_settings": {
               "allowed_export_paths": [
@@ -131,7 +131,7 @@ metadata:
             "file_storage_storage_class": "standard",
             "image": "quay.io/pulp/galaxy",
             "image_version": "latest",
-            "ingress_host": "http://ingress.local",
+            "ingress_host": "ingress.local",
             "ingress_type": "nodeport",
             "pulp_settings": {
               "allowed_export_paths": [

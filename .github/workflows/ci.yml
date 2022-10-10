@@ -2,7 +2,7 @@ name: Pulp CI
 on:
   push:
     branches:
-      - main
+      - '*'
     tags:
       - '*'
   workflow_dispatch:
@@ -122,10 +122,10 @@ jobs:
           mv ./bin/kustomize /usr/local/bin/kustomize
           kustomize version
         shell: bash
-      - name: Check code format and generate manifests
-        run: |
-          make test
-        shell: bash
+      # - name: Check code format and generate manifests
+      #   run: |
+      #     make test
+      #   shell: bash
       - name: Prepare Object Storage
         run: |
           .ci/scripts/prepare-object-storage.sh
@@ -231,10 +231,10 @@ jobs:
           mv ./bin/kustomize /usr/local/bin/kustomize
           kustomize version
         shell: bash
-      - name: Check code format and generate manifests
-        run: |
-          make test
-        shell: bash
+      # - name: Check code format and generate manifests
+      #   run: |
+      #     make test
+      #   shell: bash
       - name: Prepare Object Storage
         run: |
           .ci/scripts/prepare-object-storage.sh

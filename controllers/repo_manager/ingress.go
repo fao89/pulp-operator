@@ -201,6 +201,11 @@ func (r *RepoManagerReconciler) pulpIngressObject(ctx context.Context, m *repoma
 	if len(nginxProxyConnectTimeout) == 0 {
 		nginxProxyConnectTimeout = "120s"
 	}
+	isOpenShift, _ := controllers.IsOpenShift()
+	hAProxyTimeout := m.Spec.HAProxyTimeout
+	if len(hAProxyTimeout) == 0 {
+		hAProxyTimeout = "180s"
+	}
 
 	if isNginxIngressSupported {
 		annotation["nginx.ingress.kubernetes.io/proxy-body-size"] = nginxProxyBodySize
@@ -215,6 +220,27 @@ func (r *RepoManagerReconciler) pulpIngressObject(ctx context.Context, m *repoma
 					continue
 				}
 				annotation["nginx.ingress.kubernetes.io/configuration-snippet"] = rewrite
+				continue
+			}
+			path = netv1.HTTPIngressPath{
+				Path:     plugin.Path,
+				PathType: &pathType,
+				Backend: netv1.IngressBackend{
+					Service: &netv1.IngressServiceBackend{
+						Name: plugin.ServiceName,
+						Port: netv1.ServiceBackendPort{
+							Name: plugin.TargetPort,
+						},
+					},
+				},
+			}
+			paths = append(paths, path)
+		}
+	} else if isOpenShift {
+		annotation["haproxy.router.openshift.io/timeout"] = hAProxyTimeout
+		for _, plugin := range plugins {
+			if len(plugin.Rewrite) > 0 {
+				annotation["haproxy.router.openshift.io/rewrite-target"] = plugin.Rewrite
 				continue
 			}
 			path = netv1.HTTPIngressPath{

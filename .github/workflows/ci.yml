@@ -1,10 +1,6 @@
 name: Pulp CI
 on:
   push:
-    branches:
-      - main
-    tags:
-      - '*'
   workflow_dispatch:
   pull_request:
     branches:
@@ -367,7 +363,6 @@ jobs:
         run: .github/workflows/scripts/show_logs.sh
   deploy:
     runs-on: ubuntu-latest
-    needs: [containerized, components, galaxy]
     if: github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v2
@@ -404,7 +399,7 @@ jobs:
       - name: Quay login
         env:
           QUAY_BOT_PASSWORD: ${{ secrets.QUAY_BOT_PASSWORD }}
-          QUAY_BOT_USERNAME: pulp+github
+          QUAY_BOT_USERNAME: fabricio_aguiar
         run: echo "$QUAY_BOT_PASSWORD" | docker login -u "$QUAY_BOT_USERNAME" --password-stdin quay.io
       - name: Build and Push images
         run: |
